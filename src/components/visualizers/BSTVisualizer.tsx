@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../../lib/utils';
 
 interface BSTNode {
     value: number;
@@ -139,7 +138,7 @@ export const BSTVisualizer: React.FC = () => {
                 <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') handleInsert(); }}
                     placeholder="Value (0–999)"
-                    className="w-28 bg-brand-800 border border-white/10 rounded-input px-3 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-brand-500 transition-colors" />
+                    className="w-28 bg-brand-800 border border-borderAdaptive/10 rounded-input px-3 py-1.5 text-sm text-text-1 font-mono focus:outline-none focus:border-brand-500 transition-colors" />
                 <button onClick={handleInsert}
                     className="px-3 py-1.5 bg-brand-500 hover:bg-brand-500/80 text-white text-xs font-bold rounded-btn transition-all active:scale-95">
                     Insert
@@ -149,7 +148,7 @@ export const BSTVisualizer: React.FC = () => {
                     Search
                 </button>
                 <select value={traversalType} onChange={(e) => setTraversalType(e.target.value as 'inorder' | 'preorder' | 'postorder')}
-                    className="bg-brand-800 border border-white/10 rounded-input px-2 py-1.5 text-xs text-text-2 focus:outline-none">
+                    className="bg-brand-800 border border-borderAdaptive/10 rounded-input px-2 py-1.5 text-xs text-text-2 focus:outline-none">
                     <option value="inorder">Inorder</option>
                     <option value="preorder">Preorder</option>
                     <option value="postorder">Postorder</option>
@@ -159,13 +158,13 @@ export const BSTVisualizer: React.FC = () => {
                     Traverse
                 </button>
                 <button onClick={() => { setTree(buildInitial()); setStates({}); setTraversalResult([]); setInputVal(''); }}
-                    className="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-text-2 text-xs font-bold rounded-btn border border-white/10 transition-all active:scale-95 ml-auto">
+                    className="px-3 py-1.5 bg-borderAdaptive/5 hover:bg-borderAdaptive/10 text-text-2 text-xs font-bold rounded-btn border border-borderAdaptive/10 transition-all active:scale-95 ml-auto">
                     Reset
                 </button>
             </div>
 
             {/* SVG Tree */}
-            <div className="rounded-card overflow-hidden border border-white/5" style={{ background: '#080C10', minHeight: 300 }}>
+            <div className="rounded-card overflow-hidden border border-borderAdaptive/5" style={{ background: '#080C10', minHeight: 300 }}>
                 <svg width="100%" height={300} viewBox="0 0 560 300" style={{ overflow: 'visible' }}>
                     {/* Render edges first (below nodes) */}
                     <AnimatePresence>
@@ -221,7 +220,7 @@ export const BSTVisualizer: React.FC = () => {
 
             {/* Traversal result */}
             {traversalResult.length > 0 && (
-                <div className="glass rounded-card px-4 py-2.5 border border-white/5 flex flex-wrap items-center gap-1.5">
+                <div className="glass rounded-card px-4 py-2.5 border border-borderAdaptive/5 flex flex-wrap items-center gap-1.5">
                     <span className="text-xs font-medium text-text-2 font-mono mr-2 capitalize">{traversalType}:</span>
                     <AnimatePresence>
                         {traversalResult.map((v, i) => (
@@ -229,7 +228,7 @@ export const BSTVisualizer: React.FC = () => {
                                 initial={{ opacity: 0, y: 8, scale: 0.8 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 transition={{ type: 'spring', stiffness: 300, delay: 0 }}
-                                className="px-2 py-0.5 bg-brand-700 text-white text-xs font-mono rounded border border-brand-500/30">
+                                className="px-2 py-0.5 bg-brand-700 text-text-1 text-xs font-mono rounded border border-brand-500/30">
                                 {v}
                             </motion.span>
                         ))}

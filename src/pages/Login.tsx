@@ -24,7 +24,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({ label, type = 'text', val
         <div className="relative w-full">
             <div className={cn(
                 'relative border rounded-input transition-all duration-200',
-                focused ? 'border-brand-500 ring-1 ring-brand-500/30' : error ? 'border-rose/50' : 'border-white/10 hover:border-white/20',
+                focused ? 'border-brand-500 ring-1 ring-brand-500/30' : error ? 'border-rose/50' : 'border-borderAdaptive/10 hover:border-borderAdaptive/20',
                 'bg-brand-900/50'
             )}>
                 {/* Floating label */}
@@ -45,7 +45,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({ label, type = 'text', val
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full bg-transparent text-white text-sm pt-5 pb-2 pl-10 pr-10 focus:outline-none rounded-input font-sans"
+                    className="w-full bg-transparent text-text-1 text-sm pt-5 pb-2 pl-10 pr-10 focus:outline-none rounded-input font-sans"
                 />
 
                 {extra && <div className="absolute right-3 top-1/2 -translate-y-1/2">{extra}</div>}
@@ -97,7 +97,7 @@ export const Login: React.FC = () => {
 
     return (
         <AuthLayout>
-            <h1 className="text-2xl font-extrabold text-white text-center mb-1">Welcome back</h1>
+            <h1 className="text-2xl font-extrabold text-text-1 text-center mb-1">Welcome back</h1>
             <p className="text-text-2 text-sm text-center mb-8">Continue your free learning journey</p>
 
             {/* Google */}
@@ -113,9 +113,9 @@ export const Login: React.FC = () => {
 
             {/* Divider */}
             <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1 h-px bg-white/10" />
+                <div className="flex-1 h-px bg-borderAdaptive/10" />
                 <span className="text-text-2 text-xs">or</span>
-                <div className="flex-1 h-px bg-white/10" />
+                <div className="flex-1 h-px bg-borderAdaptive/10" />
             </div>
 
             <motion.form onSubmit={handleSubmit} animate={shake ? { x: [-8, 8, -6, 6, -4, 4, 0] } : { x: 0 }} transition={{ duration: 0.4 }} className="flex flex-col gap-4">
@@ -137,14 +137,14 @@ export const Login: React.FC = () => {
                     error={errors.password}
                     autoComplete="current-password"
                     extra={
-                        <button type="button" onClick={() => setShowPw((p) => !p)} className="text-text-2 hover:text-white transition-colors">
+                        <button type="button" onClick={() => setShowPw((p) => !p)} className="text-text-2 hover:text-text-1 transition-colors">
                             {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                     }
                 />
 
                 <div className="text-right">
-                    <Link to="#" className="text-xs text-brand-300 hover:text-white transition-colors">Forgot password?</Link>
+                    <Link to="#" className="text-xs text-brand-300 hover:text-text-1 transition-colors">Forgot password?</Link>
                 </div>
 
                 <motion.button
@@ -152,18 +152,18 @@ export const Login: React.FC = () => {
                     disabled={status === 'loading' || status === 'success'}
                     whileHover={status === 'idle' ? { scale: 1.02, boxShadow: '0 0 30px rgba(37,99,235,0.4)' } : {}}
                     whileTap={{ scale: 0.97 }}
-                    className="w-full py-3 rounded-btn font-bold text-white text-sm flex items-center justify-center gap-2 transition-all"
+                    className="w-full py-3 rounded-btn font-bold text-text-1 text-sm flex items-center justify-center gap-2 transition-all"
                     style={{ background: 'linear-gradient(135deg,#2563EB,#8B5CF6)' }}
                 >
                     {status === 'idle' && 'Sign In'}
-                    {status === 'loading' && <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                    {status === 'loading' && <div className="w-5 h-5 border-2 border-borderAdaptive/30 border-t-white rounded-full animate-spin" />}
                     {status === 'success' && <><Check className="w-5 h-5" /> Success! Redirecting...</>}
                 </motion.button>
             </motion.form>
 
             <p className="text-center text-sm text-text-2 mt-6">
                 New to CodeViz?{' '}
-                <Link to="/signup" className="text-brand-300 hover:text-white font-semibold transition-colors">Sign up free →</Link>
+                <Link to="/signup" className="text-brand-300 hover:text-text-1 font-semibold transition-colors">Sign up free →</Link>
             </p>
         </AuthLayout>
     );

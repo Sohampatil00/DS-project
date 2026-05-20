@@ -67,7 +67,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                 {/* Logo */}
                 <Link to="/" className="flex flex-col items-center mb-6 group">
                     <span className="text-3xl font-extrabold tracking-tight">
-                        <span className="text-white">Code</span>
+                        <span className="text-text-1">Code</span>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-purple">Viz</span>
                     </span>
                     <span className="text-text-2 text-sm mt-1 font-medium">Visual Code Learning</span>

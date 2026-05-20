@@ -24,7 +24,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({ label, type = 'text', val
         <div className="relative w-full">
             <div className={cn(
                 'relative border rounded-input transition-all duration-200',
-                focused ? 'border-brand-500 ring-1 ring-brand-500/30' : error ? 'border-rose/50' : 'border-white/10 hover:border-white/20',
+                focused ? 'border-brand-500 ring-1 ring-brand-500/30' : error ? 'border-rose/50' : 'border-borderAdaptive/10 hover:border-borderAdaptive/20',
                 'bg-brand-900/50'
             )}>
                 <label className={cn(
@@ -41,7 +41,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({ label, type = 'text', val
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full bg-transparent text-white text-sm pt-5 pb-2 pl-10 pr-10 focus:outline-none rounded-input font-sans"
+                    className="w-full bg-transparent text-text-1 text-sm pt-5 pb-2 pl-10 pr-10 focus:outline-none rounded-input font-sans"
                 />
                 {extra && <div className="absolute right-3 top-1/2 -translate-y-1/2">{extra}</div>}
             </div>
@@ -109,7 +109,7 @@ export const Signup: React.FC = () => {
 
     return (
         <AuthLayout>
-            <h1 className="text-2xl font-extrabold text-white text-center mb-1">Start learning free</h1>
+            <h1 className="text-2xl font-extrabold text-text-1 text-center mb-1">Start learning free</h1>
             <p className="text-text-2 text-sm text-center mb-8">Join 50,000+ students. No card required.</p>
 
             <motion.form
@@ -131,7 +131,7 @@ export const Signup: React.FC = () => {
                         error={errors.password}
                         autoComplete="new-password"
                         extra={
-                            <button type="button" onClick={() => setShowPw((p) => !p)} className="text-text-2 hover:text-white transition-colors">
+                            <button type="button" onClick={() => setShowPw((p) => !p)} className="text-text-2 hover:text-text-1 transition-colors">
                                 {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         }
@@ -165,7 +165,7 @@ export const Signup: React.FC = () => {
                     error={errors.confirm}
                     autoComplete="new-password"
                     extra={
-                        <button type="button" onClick={() => setShowConfirm((p) => !p)} className="text-text-2 hover:text-white transition-colors">
+                        <button type="button" onClick={() => setShowConfirm((p) => !p)} className="text-text-2 hover:text-text-1 transition-colors">
                             {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                     }
@@ -179,21 +179,21 @@ export const Signup: React.FC = () => {
                             onClick={() => setAgreed((a) => !a)}
                             className={cn(
                                 'w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all',
-                                agreed ? 'border-brand-500' : errors.terms ? 'border-rose' : 'border-white/20 group-hover:border-white/40'
+                                agreed ? 'border-brand-500' : errors.terms ? 'border-rose' : 'border-borderAdaptive/20 group-hover:border-borderAdaptive/40'
                             )}
                             style={agreed ? { background: 'linear-gradient(135deg,#2563EB,#8B5CF6)' } : {}}
                         >
                             <AnimatePresence>
                                 {agreed && (
                                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={{ type: 'spring', stiffness: 400 }}>
-                                        <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                                        <Check className="w-3 h-3 text-text-1" strokeWidth={3} />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </button>
                         <span className="text-xs text-text-2 leading-relaxed">
-                            I agree to the <Link to="#" className="text-brand-300 hover:text-white">Terms of Service</Link> and{' '}
-                            <Link to="#" className="text-brand-300 hover:text-white">Privacy Policy</Link>
+                            I agree to the <Link to="#" className="text-brand-300 hover:text-text-1">Terms of Service</Link> and{' '}
+                            <Link to="#" className="text-brand-300 hover:text-text-1">Privacy Policy</Link>
                         </span>
                     </label>
                     {errors.terms && <p className="text-rose text-xs mt-1 ml-8">{errors.terms}</p>}
@@ -205,11 +205,11 @@ export const Signup: React.FC = () => {
                         disabled={status === 'loading' || status === 'success'}
                         whileHover={status === 'idle' ? { scale: 1.02, boxShadow: '0 0 30px rgba(37,99,235,0.4)' } : {}}
                         whileTap={{ scale: 0.97 }}
-                        className="w-full py-3 rounded-btn font-bold text-white text-sm flex items-center justify-center gap-2 transition-all"
+                        className="w-full py-3 rounded-btn font-bold text-text-1 text-sm flex items-center justify-center gap-2 transition-all"
                         style={{ background: 'linear-gradient(135deg,#2563EB,#8B5CF6)' }}
                     >
                         {status === 'idle' && 'Create Free Account'}
-                        {status === 'loading' && <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                        {status === 'loading' && <div className="w-5 h-5 border-2 border-borderAdaptive/30 border-t-white rounded-full animate-spin" />}
                         {status === 'success' && <><Check className="w-5 h-5" /> Account created!</>}
                     </motion.button>
                     <p className="text-center text-xs text-text-2 mt-1.5">It's free!</p>
@@ -218,7 +218,7 @@ export const Signup: React.FC = () => {
 
             <p className="text-center text-sm text-text-2 mt-6">
                 Already have an account?{' '}
-                <Link to="/login" className="text-brand-300 hover:text-white font-semibold transition-colors">Sign in →</Link>
+                <Link to="/login" className="text-brand-300 hover:text-text-1 font-semibold transition-colors">Sign in →</Link>
             </p>
         </AuthLayout>
     );

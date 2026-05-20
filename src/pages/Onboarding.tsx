@@ -190,7 +190,7 @@ export const Onboarding: React.FC = () => {
                     {step === 0 && (
                         <motion.div key="step0" custom={dir} variants={VARIANTS} initial="enter" animate="center" exit="exit"
                             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}>
-                            <h2 className="text-3xl font-extrabold text-white text-center mb-2">What brings you to CodeViz?</h2>
+                            <h2 className="text-3xl font-extrabold text-text-1 text-center mb-2">What brings you to CodeViz?</h2>
                             <p className="text-text-2 text-center mb-8 text-sm">Pick your learning goal — you can change this anytime.</p>
                             <div className="grid grid-cols-2 gap-4">
                                 {goals.map((g) => {
@@ -199,15 +199,15 @@ export const Onboarding: React.FC = () => {
                                         <motion.button key={g.id} onClick={() => setSelectedGoal(g.id)}
                                             whileTap={{ scale: 0.97 }}
                                             className={cn('relative glass rounded-card p-5 text-left border-2 transition-all',
-                                                active ? 'border-brand-500 shadow-glow scale-[1.02]' : 'border-white/5 hover:border-white/20')}
+                                                active ? 'border-brand-500 shadow-glow scale-[1.02]' : 'border-borderAdaptive/5 hover:border-borderAdaptive/20')}
                                             style={active ? { background: 'rgba(37,99,235,0.08)' } : {}}>
                                             {active && (
                                                 <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center">
-                                                    <Check className="w-3 h-3 text-white" />
+                                                    <Check className="w-3 h-3 text-text-1" />
                                                 </div>
                                             )}
                                             <span className="text-3xl mb-3 block">{g.icon}</span>
-                                            <p className="text-white font-bold text-sm mb-1">{g.title}</p>
+                                            <p className="text-text-1 font-bold text-sm mb-1">{g.title}</p>
                                             <p className="text-text-2 text-xs leading-relaxed">{g.desc}</p>
                                         </motion.button>
                                     );
@@ -220,7 +220,7 @@ export const Onboarding: React.FC = () => {
                     {step === 1 && (
                         <motion.div key="step1" custom={dir} variants={VARIANTS} initial="enter" animate="center" exit="exit"
                             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}>
-                            <h2 className="text-3xl font-extrabold text-white text-center mb-2">How much do you know?</h2>
+                            <h2 className="text-3xl font-extrabold text-text-1 text-center mb-2">How much do you know?</h2>
                             <p className="text-text-2 text-center mb-8 text-sm">Be honest — we'll tailor your path.</p>
                             <div className="flex flex-col gap-3">
                                 {levels.map((l) => {
@@ -229,11 +229,11 @@ export const Onboarding: React.FC = () => {
                                         <motion.button key={l.id} onClick={() => setSelectedLevel(l.id)}
                                             whileTap={{ scale: 0.98 }}
                                             className={cn('glass rounded-card p-4 text-left border-2 flex items-center gap-4 transition-all',
-                                                active ? 'border-brand-500' : 'border-white/5 hover:border-white/20')}
+                                                active ? 'border-brand-500' : 'border-borderAdaptive/5 hover:border-borderAdaptive/20')}
                                             style={active ? { background: 'rgba(37,99,235,0.08)' } : {}}>
                                             <span className="text-3xl">{l.icon}</span>
                                             <div className="flex-1">
-                                                <p className="text-white font-bold text-sm">{l.title}</p>
+                                                <p className="text-text-1 font-bold text-sm">{l.title}</p>
                                                 <p className="text-text-2 text-xs mt-0.5">{l.desc}</p>
                                             </div>
                                             <div className="flex gap-1">
@@ -253,7 +253,7 @@ export const Onboarding: React.FC = () => {
                     {step === 2 && (
                         <motion.div key="step2" custom={dir} variants={VARIANTS} initial="enter" animate="center" exit="exit"
                             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}>
-                            <h2 className="text-3xl font-extrabold text-white text-center mb-2">Pick your language(s)</h2>
+                            <h2 className="text-3xl font-extrabold text-text-1 text-center mb-2">Pick your language(s)</h2>
                             <p className="text-text-2 text-center mb-8 text-sm">Select at least one — you can change this anytime.</p>
                             <div className="grid grid-cols-2 gap-3">
                                 {langs.map((l) => {
@@ -263,14 +263,14 @@ export const Onboarding: React.FC = () => {
                                     return (
                                         <motion.button key={l.id} onClick={toggle} whileTap={{ scale: 0.96 }}
                                             className={cn('relative overflow-hidden glass rounded-card p-5 text-left border-2 transition-all',
-                                                active ? 'border-2' : 'border-white/5 hover:border-white/20')}
+                                                active ? 'border-2' : 'border-borderAdaptive/5 hover:border-borderAdaptive/20')}
                                             style={active ? { borderColor: l.color, background: l.bg } : {}}>
-                                            <p className="text-2xl font-black text-white mb-1">{l.label}</p>
+                                            <p className="text-2xl font-black text-text-1 mb-1">{l.label}</p>
                                             <p className="text-text-2 text-xs leading-relaxed">{l.tagline}</p>
                                             {active && (
                                                 <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center"
                                                     style={{ background: l.color }}>
-                                                    <Check className="w-3 h-3 text-white" />
+                                                    <Check className="w-3 h-3 text-text-1" />
                                                 </div>
                                             )}
                                         </motion.button>
@@ -284,7 +284,7 @@ export const Onboarding: React.FC = () => {
                     {step === 3 && (
                         <motion.div key="step3" custom={dir} variants={VARIANTS} initial="enter" animate="center" exit="exit"
                             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}>
-                            <h2 className="text-3xl font-extrabold text-white text-center mb-2">Set a daily goal</h2>
+                            <h2 className="text-3xl font-extrabold text-text-1 text-center mb-2">Set a daily goal</h2>
                             <p className="text-text-2 text-center mb-10 text-sm">Consistency beats intensity. Even 10 min/day compounds.</p>
 
                             {/* Slider */}
@@ -323,7 +323,7 @@ export const Onboarding: React.FC = () => {
                                 <motion.div key={dailyGoal}
                                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                     className="glass rounded-card p-5 border border-brand-500/20 mb-4">
-                                    <p className="text-white font-bold text-lg mb-1">
+                                    <p className="text-text-1 font-bold text-lg mb-1">
                                         At {dailyGoal < 60 ? `${dailyGoal} min` : '1 hour'}/day, you'll complete Module 1 in{' '}
                                         <span className="text-brand-300">{goalPrediction[dailyGoal]}</span> 🎯
                                     </p>
@@ -349,7 +349,7 @@ export const Onboarding: React.FC = () => {
                                     langs.map((l) => l.id).filter((l) => selectedLangs.includes(l)).join(', '),
                                     `${dailyGoal < 60 ? `${dailyGoal} min` : '1 hr'}/day`,
                                 ].filter(Boolean).map((pill) => (
-                                    <span key={pill} className="px-4 py-2 glass rounded-full text-sm font-medium text-white border border-white/10">
+                                    <span key={pill} className="px-4 py-2 glass rounded-full text-sm font-medium text-text-1 border border-borderAdaptive/10">
                                         {pill}
                                     </span>
                                 ))}
@@ -358,7 +358,7 @@ export const Onboarding: React.FC = () => {
                             <motion.button onClick={finish}
                                 whileHover={{ scale: 1.04, boxShadow: '0 0 40px rgba(37,99,235,0.5)' }}
                                 whileTap={{ scale: 0.97 }}
-                                className="flex items-center gap-2 mx-auto px-8 py-4 rounded-btn text-lg font-bold text-white"
+                                className="flex items-center gap-2 mx-auto px-8 py-4 rounded-btn text-lg font-bold text-text-1"
                                 style={{ background: 'linear-gradient(135deg, #2563EB, #8B5CF6)' }}>
                                 Start Learning Free
                                 <motion.span animate={{ x: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
@@ -375,21 +375,21 @@ export const Onboarding: React.FC = () => {
                         <motion.button onClick={goPrev} disabled={step === 0}
                             whileTap={{ scale: 0.96 }}
                             className={cn('flex items-center gap-1.5 px-4 py-2 rounded-btn text-sm font-medium transition-all',
-                                step === 0 ? 'opacity-0 pointer-events-none' : 'text-text-2 hover:text-white border border-white/10 hover:border-white/20')}>
+                                step === 0 ? 'opacity-0 pointer-events-none' : 'text-text-2 hover:text-text-1 border border-borderAdaptive/10 hover:border-borderAdaptive/20')}>
                             <ChevronLeft className="w-4 h-4" /> Back
                         </motion.button>
 
                         <button onClick={() => {
                             setSelectedGoal(null); setSelectedLevel(null); setSelectedLangs([]); setDailyGoal(20);
                             navigate('/dashboard');
-                        }} className="text-xs text-text-2 hover:text-white transition-colors">
+                        }} className="text-xs text-text-2 hover:text-text-1 transition-colors">
                             Skip for now
                         </button>
 
                         <motion.button onClick={goNext} disabled={!canContinue}
                             whileHover={canContinue ? { scale: 1.04, boxShadow: '0 0 24px rgba(37,99,235,0.4)' } : {}}
                             whileTap={{ scale: 0.96 }}
-                            className={cn('flex items-center gap-1.5 px-6 py-2.5 rounded-btn text-sm font-bold text-white transition-all',
+                            className={cn('flex items-center gap-1.5 px-6 py-2.5 rounded-btn text-sm font-bold text-text-1 transition-all',
                                 canContinue ? '' : 'opacity-40 cursor-not-allowed')}
                             style={{ background: 'linear-gradient(135deg, #2563EB, #8B5CF6)' }}>
                             Continue <ChevronRight className="w-4 h-4" />

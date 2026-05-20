@@ -17,7 +17,7 @@ export const MobileNav: React.FC = () => {
     if (isAuth) return null;
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 h-14 z-40 md:hidden glass border-t border-white/5 flex items-center px-2">
+        <nav className="fixed bottom-0 left-0 right-0 h-14 z-40 md:hidden glass border-t border-borderAdaptive/5 flex items-center px-2">
             {tabs.map(({ label, path, icon: Icon }) => {
                 const active = path === '/' ? pathname === '/' : pathname.startsWith(path);
                 return (

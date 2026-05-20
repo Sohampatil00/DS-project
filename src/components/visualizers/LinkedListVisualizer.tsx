@@ -135,13 +135,13 @@ export const LinkedListVisualizer: React.FC<{ isPlaying?: boolean; speed?: numbe
                 <input type="number" value={inputVal} onChange={(e) => setInputVal(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') { insertTail(+inputVal); setInputVal(''); } }}
                     placeholder="Value"
-                    className="w-24 bg-brand-800 border border-white/10 rounded-input px-3 py-1.5 text-sm text-white font-mono focus:outline-none focus:border-brand-500 transition-colors" />
+                    className="w-24 bg-brand-800 border border-borderAdaptive/10 rounded-input px-3 py-1.5 text-sm text-text-1 font-mono focus:outline-none focus:border-brand-500 transition-colors" />
                 <button onClick={() => { if (inputVal) { insertTail(+inputVal); setInputVal(''); } }}
                     className="px-3 py-1.5 bg-brand-500 hover:bg-brand-500/80 text-white text-xs font-bold rounded-btn transition-all active:scale-95">
                     + Tail
                 </button>
                 <button onClick={() => { if (inputVal) { insertHead(+inputVal); setInputVal(''); } }}
-                    className="px-3 py-1.5 bg-purple/80 hover:bg-purple text-white text-xs font-bold rounded-btn transition-all active:scale-95">
+                    className="px-3 py-1.5 bg-purple/80 hover:bg-purple text-text-1 text-xs font-bold rounded-btn transition-all active:scale-95">
                     + Head
                 </button>
                 <button onClick={() => { if (inputVal) { search(+inputVal); setInputVal(''); } }}
@@ -157,13 +157,13 @@ export const LinkedListVisualizer: React.FC<{ isPlaying?: boolean; speed?: numbe
                     Traverse
                 </button>
                 <button onClick={() => { setNodes([]); setLog([]); }}
-                    className="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-text-2 text-xs font-bold rounded-btn border border-white/10 transition-all active:scale-95 ml-auto">
+                    className="px-3 py-1.5 bg-borderAdaptive/5 hover:bg-borderAdaptive/10 text-text-2 text-xs font-bold rounded-btn border border-borderAdaptive/10 transition-all active:scale-95 ml-auto">
                     Clear
                 </button>
             </div>
 
             {/* SVG Canvas */}
-            <div className="w-full rounded-card overflow-x-auto border border-white/5 custom-scrollbar" style={{ background: '#080C10' }}>
+            <div className="w-full rounded-card overflow-x-auto border border-borderAdaptive/5 custom-scrollbar" style={{ background: '#080C10' }}>
                 <svg width={totalWidth} height={200} style={{ display: 'block' }}>
                     <defs>
                         <marker id="ll-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
@@ -244,7 +244,7 @@ export const LinkedListVisualizer: React.FC<{ isPlaying?: boolean; speed?: numbe
 
             {/* Memory table */}
             {nodes.length > 0 && (
-                <div className="glass rounded-card p-3 border border-white/5 overflow-hidden">
+                <div className="glass rounded-card p-3 border border-borderAdaptive/5 overflow-hidden">
                     <p className="text-[10px] uppercase tracking-widest text-text-2 font-bold mb-2">Memory View</p>
                     <div className="overflow-x-auto custom-scrollbar">
                         <table className="w-full text-xs font-mono text-text-2 border-collapse">

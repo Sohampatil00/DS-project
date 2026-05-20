@@ -47,7 +47,7 @@ export const Landing = () => {
                             <SparklesIcon className="w-3.5 h-3.5 mr-1" /> 100% Free
                         </Badge>
                         <h1 className="text-5xl md:text-6xl lg:text-[72px] font-bold leading-[1.1] tracking-tight">
-                            <span className="text-white block">Learn to Code —</span>
+                            <span className="text-text-1 block">Learn to Code —</span>
                             <GradientText>See It Come to Life</GradientText>
                         </h1>
                         <p className="text-xl text-text-2 max-w-lg leading-relaxed">
@@ -58,12 +58,12 @@ export const Landing = () => {
                             <button className="w-full sm:w-auto bg-cta-gradient px-8 py-4 rounded-btn text-base font-semibold text-white hover:shadow-glow transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group">
                                 Start Learning Free <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
-                            <button className="w-full sm:w-auto glass px-8 py-4 rounded-btn text-base font-semibold text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                            <button className="w-full sm:w-auto glass px-8 py-4 rounded-btn text-base font-semibold text-white hover:bg-borderAdaptive/10 transition-colors flex items-center justify-center gap-2">
                                 <Play className="w-4 h-4 fill-white" /> Watch 60s Demo
                             </button>
                         </div>
 
-                        <div className="flex items-center gap-4 mt-8 pt-6 border-t border-white/10 w-full">
+                        <div className="flex items-center gap-4 mt-8 pt-6 border-t border-borderAdaptive/10 w-full">
                             <div className="flex -space-x-2">
                                 {[1, 2, 3, 4, 5].map(i => (
                                     <div key={i} className={`w-8 h-8 rounded-full border-2 border-brand-900 bg-brand-700 flex items-center justify-center text-xs font-bold z-${10 - i}`}>
@@ -91,52 +91,72 @@ export const Landing = () => {
                             className="w-full relative preserve-3d rotate-y-[-5deg] rotate-x-[5deg]"
                         >
                             <div className="absolute inset-0 bg-brand-500/20 blur-[100px] rounded-full" />
-                            <GlassCard className="relative p-0 overflow-hidden border border-white/20 shadow-glow bg-brand-800/80 backdrop-blur-2xl">
+                            <GlassCard className="relative p-0 overflow-hidden border border-borderAdaptive/20 shadow-glow bg-brand-800/80 backdrop-blur-2xl">
                                 {/* Mock UI window */}
-                                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-brand-900/50">
+                                <div className="flex items-center gap-2 px-4 py-3 border-b border-borderAdaptive/10 bg-brand-900/50">
                                     <div className="w-3 h-3 rounded-full bg-rose/80" />
                                     <div className="w-3 h-3 rounded-full bg-amber/80" />
                                     <div className="w-3 h-3 rounded-full bg-green/80" />
-                                    <div className="mx-auto text-xs text-text-2 font-mono">BinarySearchTree.py</div>
+                                    <div className="mx-auto text-xs text-text-2 font-mono">BinarySearchTree.cpp</div>
                                 </div>
                                 <div className="grid grid-cols-5 h-[350px]">
                                     {/* Code Panel */}
-                                    <div className="col-span-2 border-r border-white/10 p-4 font-mono text-[10px] leading-relaxed text-brand-300">
-                                        <p className="text-purple">def <span className="text-brand-300">insert</span><span className="text-white">(self, val):</span></p>
-                                        <p className="pl-4">if not self.root:</p>
-                                        <p className="pl-8 text-green">self.root = Node(val)</p>
-                                        <p className="pl-8">return</p>
-                                        <p className="pl-4 mt-2 text-text-2"># Live execution step</p>
-                                        <p className="pl-4 bg-brand-500/20 text-white rounded px-1 -mx-1"><span className="animate-pulse mr-1">|</span>curr = self.root</p>
-                                        <p className="pl-4">while curr:</p>
-                                        <p className="pl-8">if val {'<'} curr.val:</p>
-                                        <p className="pl-12">...</p>
+                                    <div className="col-span-2 border-r border-borderAdaptive/10 p-4 font-mono text-[10px] leading-relaxed text-brand-300">
+                                        <p className="text-purple">void <span className="text-brand-300">inorder</span><span className="text-text-1">(Node* root) {'{'}</span></p>
+                                        <p className="pl-4">if (root != nullptr) {'{'}</p>
+                                        <p className="pl-8">inorder(root-&gt;left);</p>
+                                        <p className="pl-4 mt-2 text-text-2">// Live execution step</p>
+                                        <p className="pl-8 bg-brand-500/20 text-white rounded px-1 -mx-1"><span className="animate-pulse mr-1">|</span>cout &lt;&lt; root-&gt;val &lt;&lt; " ";</p>
+                                        <p className="pl-8 mt-2">inorder(root-&gt;right);</p>
+                                        <p className="pl-4">{'}'}</p>
+                                        <p className="text-text-1">{'}'}</p>
                                     </div>
                                     {/* Visualizer Panel */}
                                     <div className="col-span-3 p-4 flex flex-col items-center justify-center relative bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-900/50 to-transparent">
-                                        {/* Mock BST */}
+                                        {/* Mock BST Traversal */}
                                         <div className="relative w-full h-full flex flex-col items-center justify-center pt-8">
-                                            <div className="w-10 h-10 rounded-full border-2 border-white/20 bg-brand-700 flex items-center justify-center font-bold text-sm z-10 mb-8 mt-2 transition-colors duration-500">10</div>
+                                            {/* Root Note 10 */}
+                                            <motion.div 
+                                                className="w-10 h-10 rounded-full border-2 border-borderAdaptive/20 bg-brand-800 flex items-center justify-center font-bold text-sm z-10 mb-8 mt-2 relative"
+                                                animate={{ borderColor: ['rgba(255,255,255,0.2)', '#10b981', 'rgba(255,255,255,0.2)'], backgroundColor: ['#1e293b', '#10b98140', '#1e293b'] }}
+                                                transition={{ duration: 4, times: [0.3, 0.45, 0.6], repeat: Infinity }}
+                                            >
+                                                10
+                                            </motion.div>
 
-                                            <div className="absolute top-[80px] left-[35%] w-0.5 h-12 bg-white/20 -rotate-[35deg]" />
-                                            <div className="absolute top-[80px] right-[35%] w-0.5 h-12 bg-white/20 rotate-[35deg]" />
+                                            {/* Edges */}
+                                            <div className="absolute top-[80px] left-[35%] w-0.5 h-12 bg-borderAdaptive/20 -rotate-[35deg]" />
+                                            <div className="absolute top-[80px] right-[35%] w-0.5 h-12 bg-borderAdaptive/20 rotate-[35deg]" />
 
+                                            {/* Children */}
                                             <div className="flex gap-16">
-                                                <div className="w-10 h-10 rounded-full border-2 border-brand-500 bg-brand-500/20 flex items-center justify-center font-bold text-sm z-10 relative">
-                                                    <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute inset-0 rounded-full bg-brand-500 blur-md -z-10" />
+                                                {/* Left Child 5 */}
+                                                <motion.div 
+                                                    className="w-10 h-10 rounded-full border-2 border-borderAdaptive/20 bg-brand-800 flex items-center justify-center font-bold text-sm z-10 relative"
+                                                    animate={{ borderColor: ['rgba(255,255,255,0.2)', '#10b981', 'rgba(255,255,255,0.2)'], backgroundColor: ['#1e293b', '#10b98140', '#1e293b'] }}
+                                                    transition={{ duration: 4, times: [0, 0.15, 0.3], repeat: Infinity }}
+                                                >
                                                     5
-                                                </div>
-                                                <div className="w-10 h-10 rounded-full border-2 border-white/20 bg-brand-800 flex items-center justify-center font-bold text-sm z-10">15</div>
+                                                </motion.div>
+                                                {/* Right Child 15 */}
+                                                <motion.div 
+                                                    className="w-10 h-10 rounded-full border-2 border-borderAdaptive/20 bg-brand-800 flex items-center justify-center font-bold text-sm z-10 relative"
+                                                    animate={{ borderColor: ['rgba(255,255,255,0.2)', '#10b981', 'rgba(255,255,255,0.2)'], backgroundColor: ['#1e293b', '#10b98140', '#1e293b'] }}
+                                                    transition={{ duration: 4, times: [0.6, 0.75, 0.9], repeat: Infinity }}
+                                                >
+                                                    15
+                                                </motion.div>
                                             </div>
 
-                                            {/* Inserting 7 animation */}
-                                            <motion.div
-                                                className="absolute top-4 right-1/4 w-8 h-8 rounded-full bg-green flex items-center justify-center font-bold text-xs shadow-glow"
-                                                animate={{ y: [0, 120], x: [0, -50], opacity: [0, 1, 1] }}
-                                                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                                            >
-                                                7
-                                            </motion.div>
+                                            {/* Console Output */}
+                                            <div className="absolute bottom-4 flex gap-2 w-full justify-center items-center opacity-80">
+                                                <span className="text-xs text-text-2 font-mono">Output:</span>
+                                                <div className="flex gap-2 min-h-[20px]">
+                                                    <motion.div animate={{ opacity: [0, 1, 1], scale: [0.5, 1, 1] }} transition={{ duration: 4, times: [0.15, 0.2, 1], repeat: Infinity }} className="text-green font-mono text-sm font-bold">5</motion.div>
+                                                    <motion.div animate={{ opacity: [0, 0, 1, 1], scale: [0.5, 0.5, 1, 1] }} transition={{ duration: 4, times: [0.45, 0.5, 0.5, 1], repeat: Infinity }} className="text-green font-mono text-sm font-bold">10</motion.div>
+                                                    <motion.div animate={{ opacity: [0, 0, 1, 1], scale: [0.5, 0.5, 1, 1] }} transition={{ duration: 4, times: [0.75, 0.8, 0.8, 1], repeat: Infinity }} className="text-green font-mono text-sm font-bold">15</motion.div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -152,17 +172,17 @@ export const Landing = () => {
                 <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-around items-center gap-6">
                     <div className="flex items-center gap-3">
                         <CheckCircle2 className="w-6 h-6 text-green flex-shrink-0" />
-                        <span className="text-lg font-medium text-white">All 48 topics free</span>
+                        <span className="text-lg font-medium text-text-1">All 48 topics free</span>
                     </div>
                     <div className="hidden md:block w-px h-8 bg-green/20" />
                     <div className="flex items-center gap-3">
                         <CheckCircle2 className="w-6 h-6 text-green flex-shrink-0" />
-                        <span className="text-lg font-medium text-white">All 4 languages free</span>
+                        <span className="text-lg font-medium text-text-1">All 4 languages free</span>
                     </div>
                     <div className="hidden md:block w-px h-8 bg-green/20" />
                     <div className="flex items-center gap-3">
                         <CheckCircle2 className="w-6 h-6 text-green flex-shrink-0" />
-                        <span className="text-lg font-medium text-white">No credit card ever</span>
+                        <span className="text-lg font-medium text-text-1">No credit card ever</span>
                     </div>
                 </div>
             </section>
@@ -184,10 +204,10 @@ export const Landing = () => {
                         { icon: Waypoints, title: "Smart Learning Path", desc: "Prerequisite-gated topics. Learn in order.", color: "theme('colors.brand.300')" }
                     ].map((feature, i) => (
                         <GlassCard key={i} className="group hover:border-brand-500/50 transition-all duration-300 hover:-translate-y-1">
-                            <div className="w-12 h-12 rounded-full mb-4 flex items-center justify-center shrink-0 border border-white/10" style={{ background: `radial-gradient(circle at top left, ${feature.color}40, transparent)`, color: feature.color }}>
+                            <div className="w-12 h-12 rounded-full mb-4 flex items-center justify-center shrink-0 border border-borderAdaptive/10" style={{ background: `radial-gradient(circle at top left, ${feature.color}40, transparent)`, color: feature.color }}>
                                 <feature.icon className="w-6 h-6" style={{ color: feature.color }} />
                             </div>
-                            <h3 className="text-xl font-bold mb-2 text-white group-hover:text-brand-300 transition-colors">{feature.title}</h3>
+                            <h3 className="text-xl font-bold mb-2 text-text-1 group-hover:text-brand-300 transition-colors">{feature.title}</h3>
                             <p className="text-text-2 text-sm leading-relaxed">{feature.desc}</p>
                         </GlassCard>
                     ))}
@@ -195,7 +215,7 @@ export const Landing = () => {
             </section>
 
             {/* SECTION 4: MODULES */}
-            <section className="py-24 bg-brand-800/30 border-y border-white/5">
+            <section className="py-24 bg-brand-800/30 border-y border-borderAdaptive/5">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex flex-col sm:flex-row justify-between items-end gap-6 mb-12">
                         <div>
@@ -217,7 +237,7 @@ export const Landing = () => {
                             <GlassCard key={i} className="relative overflow-hidden group hover:-translate-y-2 transition-all duration-300 flex flex-col h-full hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
                                 <div className={`absolute top-0 left-0 w-full h-1 ${mod.color} group-hover:w-2 group-hover:h-full transition-all duration-300`} />
                                 <div className="flex justify-between items-start mb-4 relative z-10">
-                                    <h3 className="text-xl font-bold text-white leading-tight pr-2">{mod.name}</h3>
+                                    <h3 className="text-xl font-bold text-text-1 leading-tight pr-2">{mod.name}</h3>
                                     <Badge variant={mod.diff === 'Beginner' ? 'blue' : mod.diff === 'Intermediate' ? 'green' : mod.diff === 'Advanced' ? 'amber' : 'purple'}>{mod.diff}</Badge>
                                 </div>
                                 <div className="text-sm text-text-2 mb-6 font-mono flex items-center gap-2">
@@ -232,7 +252,7 @@ export const Landing = () => {
                                         ))}
                                     </ul>
                                 </div>
-                                <button className="w-full py-2.5 rounded-input glass hover:bg-white/10 text-white font-medium text-sm transition-colors mt-auto relative z-10 flex items-center justify-center gap-2">
+                                <button className="w-full py-2.5 rounded-input glass hover:bg-borderAdaptive/10 text-white font-medium text-sm transition-colors mt-auto relative z-10 flex items-center justify-center gap-2">
                                     Explore Free <ArrowRight className="w-4 h-4" />
                                 </button>
                             </GlassCard>
@@ -249,7 +269,7 @@ export const Landing = () => {
 
                 <div className="relative pl-8 md:pl-0">
                     {/* Vertical timeline line */}
-                    <div className="absolute left-8 md:left-1/2 top-4 bottom-4 w-px bg-white/10 md:-translate-x-1/2" />
+                    <div className="absolute left-8 md:left-1/2 top-4 bottom-4 w-px bg-borderAdaptive/10 md:-translate-x-1/2" />
 
                     {[
                         { step: "1", title: "Sign up free", desc: "No trial. No credit card. Just create an account and start learning immediately." },
@@ -258,7 +278,7 @@ export const Landing = () => {
                     ].map((item, i) => (
                         <div key={i} className={`relative flex flex-col md:flex-row items-start md:items-center gap-8 mb-16 last:mb-0 ${i % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                             <div className={`flex-1 ${i % 2 !== 0 ? 'md:text-right' : ''} pt-2 md:pt-0`}>
-                                <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
+                                <h3 className="text-2xl font-bold text-text-1 mb-2">{item.title}</h3>
                                 <p className="text-text-2 text-base leading-relaxed">{item.desc}</p>
                             </div>
 
@@ -273,13 +293,13 @@ export const Landing = () => {
             </section>
 
             {/* SECTION 6: SOCIAL PROOF */}
-            <section className="py-24 bg-brand-800/30 border-y border-white/5">
+            <section className="py-24 bg-brand-800/30 border-y border-borderAdaptive/5">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
                         <div className="flex justify-center gap-1 mb-4">
                             {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-amber text-amber" />)}
                         </div>
-                        <h2 className="text-4xl font-bold mb-4">Loved by <span className="text-white">developers</span> worldwide</h2>
+                        <h2 className="text-4xl font-bold mb-4">Loved by <span className="text-text-1">developers</span> worldwide</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -295,7 +315,7 @@ export const Landing = () => {
                                         <div className="w-full h-full bg-brand-900 rounded-full flex items-center justify-center text-xs font-bold">{testimonial.author[0]}</div>
                                     </div>
                                     <div>
-                                        <div className="font-bold text-white text-sm">{testimonial.author}</div>
+                                        <div className="font-bold text-text-1 text-sm">{testimonial.author}</div>
                                         <div className="text-brand-300 text-xs">{testimonial.role}</div>
                                     </div>
                                 </div>
@@ -309,7 +329,7 @@ export const Landing = () => {
             <section className="py-32 relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-700/40 via-brand-900 to-brand-900" />
                 <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
-                    <h2 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-white">Start learning today. <br /><GradientText>It's free forever.</GradientText></h2>
+                    <h2 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-text-1">Start learning today. <br /><GradientText>It's free forever.</GradientText></h2>
                     <p className="text-xl text-text-2 mb-10 leading-relaxed">No hidden costs. No premium locks. Just code.</p>
                     <button className="bg-cta-gradient px-10 py-5 rounded-btn text-lg font-bold text-white hover:shadow-glow transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 group mx-auto">
                         Create Free Account <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

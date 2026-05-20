@@ -109,7 +109,7 @@ export const Dashboard: React.FC = () => {
                 <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#93C5FD_1px,transparent_1px)] [background-size:24px_24px]" />
 
                 <div className="relative z-10">
-                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Welcome back, Soham! 👋</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold text-text-1 mb-1">Welcome back, Soham! 👋</h1>
                     <p className="text-amber font-semibold text-lg flex items-center gap-2">
                         Day 7 Streak <span className="text-2xl">🔥</span>
                     </p>
@@ -121,7 +121,7 @@ export const Dashboard: React.FC = () => {
                         <span className="text-brand-300 font-bold">Level 5 — Array Apprentice</span>
                         <span className="text-text-2">{XP.toLocaleString()} / {XP_MAX.toLocaleString()} XP</span>
                     </div>
-                    <div className="h-3 bg-brand-900/70 rounded-full overflow-hidden border border-white/10">
+                    <div className="h-3 bg-brand-900/70 rounded-full overflow-hidden border border-borderAdaptive/10">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${(XP / XP_MAX) * 100}%` }}
@@ -132,7 +132,7 @@ export const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="relative z-10 w-20 h-20 rounded-full flex items-center justify-center font-extrabold text-3xl text-white"
+                <div className="relative z-10 w-20 h-20 rounded-full flex items-center justify-center font-extrabold text-3xl text-text-1"
                     style={{ background: 'conic-gradient(#2563EB,#8B5CF6,#2563EB)', boxShadow: '0 0 30px rgba(37,99,235,0.4)' }}>
                     <span className="w-16 h-16 rounded-full bg-brand-900 flex items-center justify-center text-2xl font-black">5</span>
                 </div>
@@ -147,10 +147,10 @@ export const Dashboard: React.FC = () => {
                     { icon: '🏅', label: 'Badges', value: 7, suffix: '', extra: null },
                 ].map((s) => (
                     <motion.div key={s.label} whileHover={{ scale: 1.03, borderColor: 'rgba(255,255,255,0.2)' }}
-                        className="glass rounded-card p-5 border border-white/5 flex flex-col gap-2 cursor-default transition-all">
+                        className="glass rounded-card p-5 border border-borderAdaptive/5 flex flex-col gap-2 cursor-default transition-all">
                         <span className="text-2xl">{s.icon}</span>
                         <p className="text-text-2 text-xs font-medium">{s.label}</p>
-                        <p className="text-2xl font-black text-white">
+                        <p className="text-2xl font-black text-text-1">
                             <AnimatedCounter end={s.value} />{s.suffix}
                         </p>
                         {s.extra === 'donut' && (
@@ -171,15 +171,15 @@ export const Dashboard: React.FC = () => {
                     { tag: 'Resume', title: 'Linked Lists: Insertion', module: 'Data Structures', progress: 60, color: '#F59E0B', label: 'Resume →', diff: 'Intermediate' },
                     { tag: 'Up Next', title: 'Binary Search Trees', module: 'Data Structures', progress: 0, color: '#8B5CF6', label: 'Start →', diff: 'Advanced' },
                 ].map((c) => (
-                    <motion.div key={c.tag} whileHover={{ y: -3 }} className="glass rounded-card p-5 border border-white/5 relative overflow-hidden flex flex-col gap-3 cursor-pointer group">
+                    <motion.div key={c.tag} whileHover={{ y: -3 }} className="glass rounded-card p-5 border border-borderAdaptive/5 relative overflow-hidden flex flex-col gap-3 cursor-pointer group">
                         <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-card" style={{ background: c.color }} />
                         <div className="flex justify-between items-start">
                             <div>
                                 <span className="text-[10px] uppercase tracking-widest font-bold text-text-2">{c.tag}</span>
-                                <h3 className="text-lg font-bold text-white mt-0.5 group-hover:text-brand-300 transition-colors">{c.title}</h3>
+                                <h3 className="text-lg font-bold text-text-1 mt-0.5 group-hover:text-brand-300 transition-colors">{c.title}</h3>
                                 <p className="text-xs text-text-2 mt-1">{c.module}</p>
                             </div>
-                            <span className="px-2 py-0.5 rounded-full bg-brand-800 text-text-2 text-[10px] font-bold border border-white/5">{c.diff}</span>
+                            <span className="px-2 py-0.5 rounded-full bg-brand-800 text-text-2 text-[10px] font-bold border border-borderAdaptive/5">{c.diff}</span>
                         </div>
                         {c.progress > 0 && (
                             <div className="h-1.5 bg-brand-900/50 rounded-full overflow-hidden">
@@ -187,7 +187,7 @@ export const Dashboard: React.FC = () => {
                                     className="h-full rounded-full" style={{ background: c.color }} />
                             </div>
                         )}
-                        <button className="self-start px-4 py-2 rounded-btn text-sm font-bold text-white bg-brand-800 hover:bg-brand-700 border border-white/10 transition-colors">
+                        <button className="self-start px-4 py-2 rounded-btn text-sm font-bold text-white bg-brand-800 hover:bg-brand-700 border border-borderAdaptive/10 transition-colors">
                             {c.label}
                         </button>
                     </motion.div>
@@ -195,8 +195,8 @@ export const Dashboard: React.FC = () => {
             </div>
 
             {/* ── TODAY's GOALS ── */}
-            <div className="glass rounded-card p-6 border border-white/5">
-                <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">Today's Goals <span className="text-text-2 text-sm font-normal">{doneCount}/{totalGoals}</span></h2>
+            <div className="glass rounded-card p-6 border border-borderAdaptive/5">
+                <h2 className="text-lg font-bold text-text-1 mb-4 flex items-center gap-2">Today's Goals <span className="text-text-2 text-sm font-normal">{doneCount}/{totalGoals}</span></h2>
                 <div className="flex flex-col md:flex-row gap-8 items-start">
                     <div className="flex-shrink-0 flex flex-col items-center">
                         <svg width={100} height={100} viewBox="0 0 100 100">
@@ -216,10 +216,10 @@ export const Dashboard: React.FC = () => {
                                 className="flex items-center gap-3 text-left group w-full"
                                 whileTap={{ scale: 0.98 }}>
                                 <div className={cn('w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all',
-                                    g.done ? 'border-brand-500 bg-gradient-to-br from-brand-500 to-purple' : 'border-white/20 group-hover:border-white/40')}>
-                                    {g.done && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-white text-[10px]">✓</motion.span>}
+                                    g.done ? 'border-brand-500 bg-gradient-to-br from-brand-500 to-purple' : 'border-borderAdaptive/20 group-hover:border-borderAdaptive/40')}>
+                                    {g.done && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-text-1 text-[10px]">✓</motion.span>}
                                 </div>
-                                <span className={cn('text-sm font-medium flex-1', g.done ? 'line-through text-text-2' : 'text-white')}>
+                                <span className={cn('text-sm font-medium flex-1', g.done ? 'line-through text-text-2' : 'text-text-1')}>
                                     {g.text}
                                 </span>
                                 <span className="text-xs font-bold text-amber">+{g.xp} XP</span>
@@ -231,7 +231,7 @@ export const Dashboard: React.FC = () => {
 
             {/* ── BADGES ── */}
             <div>
-                <h2 className="text-lg font-bold text-white mb-4">Badges Earned</h2>
+                <h2 className="text-lg font-bold text-text-1 mb-4">Badges Earned</h2>
                 <div className="flex gap-4 overflow-x-auto pb-3 hide-scrollbar">
                     {BADGES.map((b, i) => {
                         const isFlipped = flippedBadge === i;
@@ -242,13 +242,13 @@ export const Dashboard: React.FC = () => {
                                 <div style={{ position: 'relative', width: 120, height: 140, transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0)', transition: 'transform 0.5s ease' }}>
                                     {/* Front */}
                                     <div style={{ backfaceVisibility: 'hidden', position: 'absolute', inset: 0 }}
-                                        className="glass rounded-card p-3 flex flex-col items-center gap-1.5 border border-white/5">
+                                        className="glass rounded-card p-3 flex flex-col items-center gap-1.5 border border-borderAdaptive/5">
                                         <div className={cn('w-12 h-12 rounded-full flex items-center justify-center text-2xl',
                                             isLocked ? 'grayscale opacity-40' : '')}
                                             style={{ background: 'linear-gradient(135deg,#1B3A6B,#2563EB)' }}>
                                             {isLocked ? '🔒' : b.emoji}
                                         </div>
-                                        <p className="text-[11px] font-bold text-white text-center leading-tight">{b.name}</p>
+                                        <p className="text-[11px] font-bold text-text-1 text-center leading-tight">{b.name}</p>
                                         <p className="text-[10px] text-text-2">{b.date}</p>
                                         <p className="text-[10px] text-amber font-bold">+{b.xp} XP</p>
                                     </div>
@@ -265,10 +265,10 @@ export const Dashboard: React.FC = () => {
             </div>
 
             {/* ── STREAK CALENDAR ── */}
-            <div className="glass rounded-card p-6 border border-white/5">
+            <div className="glass rounded-card p-6 border border-borderAdaptive/5">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-white">🔥 Current streak: <span className="text-amber">7 days</span></h2>
-                    <span className="text-xs text-text-2">Best: <span className="text-white font-bold">14 days</span></span>
+                    <h2 className="text-lg font-bold text-text-1">🔥 Current streak: <span className="text-amber">7 days</span></h2>
+                    <span className="text-xs text-text-2">Best: <span className="text-text-1 font-bold">14 days</span></span>
                 </div>
                 <div className="grid gap-1.5" style={{ gridTemplateColumns: 'repeat(7, minmax(0,1fr))' }}>
                     {STREAK_DATA.map((d, i) => (
@@ -278,7 +278,7 @@ export const Dashboard: React.FC = () => {
                                 background: heatColor(d.val),
                                 outline: i === 34 ? '2px solid #F59E0B' : undefined,
                             }}>
-                            <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-brand-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10 border border-white/10">
+                            <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-brand-800 text-text-1 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10 border border-borderAdaptive/10">
                                 {d.date}: {d.val} topics
                             </div>
                         </div>
@@ -287,9 +287,9 @@ export const Dashboard: React.FC = () => {
             </div>
 
             {/* ── LEADERBOARD ── */}
-            <div className="glass rounded-card p-6 border border-white/5">
+            <div className="glass rounded-card p-6 border border-borderAdaptive/5">
                 <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-lg font-bold text-white">This Week's Top Learners</h2>
+                    <h2 className="text-lg font-bold text-text-1">This Week's Top Learners</h2>
                     <span className="text-xs text-green font-medium">All learners, all free</span>
                 </div>
                 <div className="flex flex-col gap-3">
@@ -299,10 +299,10 @@ export const Dashboard: React.FC = () => {
                         return (
                             <div key={l.name} className={cn('flex items-center gap-3 p-2 rounded-input', isMe ? 'bg-brand-700/30 border border-brand-500/20' : '')}>
                                 <span className="w-8 text-center text-lg">{medal}</span>
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple flex-shrink-0 flex items-center justify-center text-text-1 text-xs font-bold">
                                     {l.name[0]}
                                 </div>
-                                <span className={cn('flex-1 text-sm font-medium', isMe ? 'text-white font-bold' : 'text-text-1')}>{l.name}{isMe ? ' (You)' : ''}</span>
+                                <span className={cn('flex-1 text-sm font-medium', isMe ? 'text-text-1 font-bold' : 'text-text-1')}>{l.name}{isMe ? ' (You)' : ''}</span>
                                 <div className="w-24 h-1.5 bg-brand-900 rounded-full overflow-hidden">
                                     <div className="h-full rounded-full bg-brand-500" style={{ width: `${(l.xp / 8240) * 100}%` }} />
                                 </div>

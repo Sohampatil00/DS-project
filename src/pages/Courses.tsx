@@ -11,10 +11,11 @@ import { Link } from 'react-router-dom';
 const DIFFS: Difficulty[] = ['Beginner', 'Intermediate', 'Advanced'];
 const LANGS: Language[] = ['C++', 'Java', 'Python', 'C'];
 const MODS: { id: ModuleId; name: string; color: string }[] = [
-    { id: 'fundamentals', name: 'Fundamentals', color: 'bg-brand-500' },
-    { id: 'oop', name: 'OOP', color: 'bg-green' },
+    { id: 'prerequisite', name: 'Prerequisites', color: 'bg-brand-500' },
+    { id: 'beginner', name: 'Beginner DSA', color: 'bg-green' },
+    { id: 'oop', name: 'OOP', color: 'bg-purple' },
     { id: 'data-structures', name: 'Data Structures', color: 'bg-amber' },
-    { id: 'advanced-ds', name: 'Advanced DS', color: 'bg-purple' }
+    { id: 'advanced-ds', name: 'Advanced DS', color: 'bg-rose' }
 ];
 
 export const Courses = () => {
@@ -52,7 +53,7 @@ export const Courses = () => {
         <div className="max-w-[1600px] mx-auto p-4 md:p-8 flex flex-col lg:flex-row gap-8 items-start">
             {/* SIDEBAR */}
             <aside className="w-full lg:w-[280px] shrink-0 sticky top-24 z-20">
-                <GlassCard className="p-5 flex flex-col gap-6 bg-brand-900/80 backdrop-blur-3xl border border-white/10 shadow-layer">
+                <GlassCard className="p-5 flex flex-col gap-6 bg-brand-900/80 backdrop-blur-3xl border border-borderAdaptive/10 shadow-layer">
 
                     {/* Search */}
                     <div className="relative group">
@@ -63,7 +64,7 @@ export const Courses = () => {
                             placeholder="Search topics (/ to focus)"
                             value={store.searchQuery}
                             onChange={(e) => store.setSearchQuery(e.target.value)}
-                            className="w-full bg-brand-800/50 border border-white/5 rounded-input py-2 pl-9 pr-8 text-sm text-white placeholder:text-text-2 focus:outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/50 transition-all font-sans"
+                            className="w-full bg-brand-800/50 border border-borderAdaptive/5 rounded-input py-2 pl-9 pr-8 text-sm text-text-1 placeholder:text-text-2 focus:outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/50 transition-all font-sans"
                         />
                         <AnimatePresence>
                             {store.searchQuery && (
@@ -72,7 +73,7 @@ export const Courses = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.8 }}
                                     onClick={() => store.setSearchQuery('')}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-text-2 hover:text-white"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-text-2 hover:text-text-1"
                                 >
                                     <X className="w-4 h-4" />
                                 </motion.button>
@@ -92,7 +93,7 @@ export const Courses = () => {
                                         onClick={() => store.toggleDifficulty(d)}
                                         className={cn(
                                             "px-3 py-1.5 rounded-full text-xs font-medium transition-all relative overflow-hidden",
-                                            active ? "text-white shadow-glow border-transparent" : "text-text-2 border border-white/10 hover:border-white/20 bg-brand-800/30 hover:bg-brand-800/80"
+                                            active ? "text-text-1 shadow-glow border-transparent" : "text-text-2 border border-borderAdaptive/10 hover:border-borderAdaptive/20 bg-brand-800/30 hover:bg-brand-800/80"
                                         )}
                                     >
                                         {active && <div className="absolute inset-0 bg-gradient-to-r from-brand-500 to-purple opacity-80" />}
@@ -115,12 +116,12 @@ export const Courses = () => {
                                     <label key={l} className="flex items-center gap-3 cursor-pointer group">
                                         <div className={cn(
                                             "w-4 h-4 rounded border flex items-center justify-center transition-all",
-                                            active ? "bg-brand-500 border-brand-500" : "border-white/20 bg-brand-800/50 group-hover:border-white/40"
+                                            active ? "bg-brand-500 border-brand-500" : "border-borderAdaptive/20 bg-brand-800/50 group-hover:border-borderAdaptive/40"
                                         )}>
-                                            {active && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                                            {active && <Check className="w-3 h-3 text-text-1" strokeWidth={3} />}
                                         </div>
                                         <input type="checkbox" className="hidden" checked={active} onChange={() => store.toggleLanguage(l)} />
-                                        <span className={cn("text-sm font-medium transition-colors font-mono", active ? "text-white" : "text-text-2 group-hover:text-white")}>{l}</span>
+                                        <span className={cn("text-sm font-medium transition-colors font-mono", active ? "text-text-1" : "text-text-2 group-hover:text-text-1")}>{l}</span>
                                     </label>
                                 );
                             })}
@@ -140,7 +141,7 @@ export const Courses = () => {
                                         onClick={() => store.toggleModule(m.id)}
                                         className={cn(
                                             "flex items-center justify-between px-3 py-2 rounded-input text-sm font-medium transition-all text-left",
-                                            active ? "bg-brand-800/80 text-white" : "hover:bg-brand-800/50 text-text-2 hover:text-white"
+                                            active ? "bg-brand-800/80 text-text-1" : "hover:bg-brand-800/50 text-text-2 hover:text-text-1"
                                         )}
                                     >
                                         <div className="flex items-center gap-2">
@@ -155,7 +156,7 @@ export const Courses = () => {
                     </div>
 
                     {/* Footer Info */}
-                    <div className="pt-4 border-t border-white/5 mt-auto">
+                    <div className="pt-4 border-t border-borderAdaptive/5 mt-auto">
                         <AnimatePresence>
                             {activeFiltersCount > 0 && (
                                 <motion.button
@@ -181,26 +182,26 @@ export const Courses = () => {
                 {/* HEADER */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <div className="flex flex-col">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Course<span className="text-brand-300">Catalog</span></h1>
-                        <p className="text-text-2 text-sm mt-1">Showing <span className="text-white font-bold">{filteredTopics.length}</span> topics</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-text-1 tracking-tight">Course<span className="text-brand-300">Catalog</span></h1>
+                        <p className="text-text-2 text-sm mt-1">Showing <span className="text-text-1 font-bold">{filteredTopics.length}</span> topics</p>
                     </div>
 
                     <div className="flex items-center gap-3">
                         <div className="glass p-1 rounded-input flex items-center">
                             <button
                                 onClick={() => store.setView('grid')}
-                                className={cn("p-1.5 rounded transition-all", store.view === 'grid' ? "bg-white/10 text-white shadow-sm" : "text-text-2 hover:text-white hover:bg-white/5")}
+                                className={cn("p-1.5 rounded transition-all", store.view === 'grid' ? "bg-borderAdaptive/10 text-text-1 shadow-sm" : "text-text-2 hover:text-text-1 hover:bg-borderAdaptive/5")}
                             >
                                 <Grid className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => store.setView('list')}
-                                className={cn("p-1.5 rounded transition-all", store.view === 'list' ? "bg-white/10 text-white shadow-sm" : "text-text-2 hover:text-white hover:bg-white/5")}
+                                className={cn("p-1.5 rounded transition-all", store.view === 'list' ? "bg-borderAdaptive/10 text-text-1 shadow-sm" : "text-text-2 hover:text-text-1 hover:bg-borderAdaptive/5")}
                             >
                                 <ListIcon className="w-4 h-4" />
                             </button>
                         </div>
-                        <button className="glass px-3 py-1.5 rounded-input text-sm font-medium flex items-center gap-2 hover:bg-white/5 transition-colors">
+                        <button className="glass px-3 py-1.5 rounded-input text-sm font-medium flex items-center gap-2 hover:bg-borderAdaptive/5 transition-colors">
                             Recommended <ChevronDown className="w-4 h-4 text-text-2" />
                         </button>
                     </div>
@@ -216,20 +217,20 @@ export const Courses = () => {
                             className="flex flex-wrap gap-2 mb-6"
                         >
                             {[...store.difficulties, ...store.languages].map(f => (
-                                <span key={f} className="pl-3 pr-1 py-1 rounded-full bg-brand-800 text-xs font-medium text-white flex items-center gap-1 border border-white/5">
+                                <span key={f} className="pl-3 pr-1 py-1 rounded-full bg-brand-800 text-xs font-medium text-text-1 flex items-center gap-1 border border-borderAdaptive/5">
                                     {f}
                                     <button onClick={() => {
                                         if (store.difficulties.includes(f as any)) store.toggleDifficulty(f as any);
                                         if (store.languages.includes(f as any)) store.toggleLanguage(f as any);
-                                    }} className="p-0.5 hover:bg-white/10 rounded-full transition-colors"><X className="w-3 h-3 text-text-2 hover:text-white" /></button>
+                                    }} className="p-0.5 hover:bg-borderAdaptive/10 rounded-full transition-colors"><X className="w-3 h-3 text-text-2 hover:text-text-1" /></button>
                                 </span>
                             ))}
                             {store.modules.map(m => {
                                 const label = MODS.find(x => x.id === m)?.name;
                                 return (
-                                    <span key={m} className="pl-3 pr-1 py-1 rounded-full bg-brand-800 text-xs font-medium text-white flex items-center gap-1 border border-white/5">
+                                    <span key={m} className="pl-3 pr-1 py-1 rounded-full bg-brand-800 text-xs font-medium text-text-1 flex items-center gap-1 border border-borderAdaptive/5">
                                         {label}
-                                        <button onClick={() => store.toggleModule(m)} className="p-0.5 hover:bg-white/10 rounded-full transition-colors"><X className="w-3 h-3 text-text-2 hover:text-white" /></button>
+                                        <button onClick={() => store.toggleModule(m)} className="p-0.5 hover:bg-borderAdaptive/10 rounded-full transition-colors"><X className="w-3 h-3 text-text-2 hover:text-text-1" /></button>
                                     </span>
                                 )
                             })}
@@ -259,7 +260,7 @@ export const Courses = () => {
                                 >
                                     <Link to={`/learn/${topic.moduleId}/${topic.id}`} className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-card">
                                         <GlassCard className={cn(
-                                            "group h-full relative overflow-hidden flex flex-col p-5 hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-brand-900/60 hover:bg-brand-800/80 border-white/5",
+                                            "group h-full relative overflow-hidden flex flex-col p-5 hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-brand-900/60 hover:bg-brand-800/80 border-borderAdaptive/5",
                                             store.view === 'list' && "sm:flex-row sm:items-center sm:gap-6",
                                             `hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]`
                                         )}>
@@ -274,30 +275,30 @@ export const Courses = () => {
                                             <div className={cn("flex flex-col flex-1", store.view === 'list' && "sm:flex-row sm:items-center sm:w-full")}>
                                                 {/* Tags Top */}
                                                 <div className={cn("flex justify-between items-start mb-3", store.view === 'list' && "sm:mb-0 sm:w-1/4 sm:flex-col sm:gap-2")}>
-                                                    <Badge variant={topic.moduleId === 'fundamentals' ? 'blue' : topic.moduleId === 'oop' ? 'green' : topic.moduleId === 'data-structures' ? 'amber' : 'purple'} className="border-none bg-opacity-20 backdrop-blur-md">
+                                                    <Badge variant={topic.moduleId === 'prerequisite' ? 'blue' : topic.moduleId === 'beginner' ? 'green' : topic.moduleId === 'oop' ? 'purple' : topic.moduleId === 'data-structures' ? 'amber' : 'rose'} className="border-none bg-opacity-20 backdrop-blur-md">
                                                         {topic.moduleName}
                                                     </Badge>
-                                                    <Badge variant="blue" className="bg-transparent border-white/10 text-text-2 group-hover:border-white/20 transition-colors">
+                                                    <Badge variant="blue" className="bg-transparent border-borderAdaptive/10 text-text-2 group-hover:border-borderAdaptive/20 transition-colors">
                                                         {topic.difficulty}
                                                     </Badge>
                                                 </div>
 
                                                 {/* Title */}
                                                 <div className={cn("mb-3", store.view === 'list' && "sm:mb-0 sm:w-1/3 sm:px-4")}>
-                                                    <h3 className="text-lg font-bold text-white group-hover:text-brand-300 transition-colors tracking-tight line-clamp-2">{topic.title}</h3>
+                                                    <h3 className="text-lg font-bold text-text-1 group-hover:text-brand-300 transition-colors tracking-tight line-clamp-2">{topic.title}</h3>
                                                 </div>
 
                                                 {/* Langs */}
                                                 <div className={cn("flex flex-wrap gap-1.5 mb-4", store.view === 'list' && "sm:mb-0 sm:w-1/4")}>
                                                     {topic.languages.map(l => (
-                                                        <span key={l} className="px-1.5 py-0.5 rounded text-[10px] uppercase font-mono font-bold bg-brand-800 text-text-2 group-hover:bg-brand-900/50 group-hover:text-white transition-colors border border-white/5">
+                                                        <span key={l} className="px-1.5 py-0.5 rounded text-[10px] uppercase font-mono font-bold bg-brand-800 text-text-2 group-hover:bg-brand-900/50 group-hover:text-text-1 transition-colors border border-borderAdaptive/5">
                                                             {l}
                                                         </span>
                                                     ))}
                                                 </div>
 
                                                 {/* Footer Meta & CTA */}
-                                                <div className={cn("mt-auto pt-4 border-t border-white/5 flex flex-col gap-4", store.view === 'list' && "sm:mt-0 sm:pt-0 sm:border-none sm:w-1/6 sm:flex-row sm:items-center sm:justify-end")}>
+                                                <div className={cn("mt-auto pt-4 border-t border-borderAdaptive/5 flex flex-col gap-4", store.view === 'list' && "sm:mt-0 sm:pt-0 sm:border-none sm:w-1/6 sm:flex-row sm:items-center sm:justify-end")}>
                                                     <div className={cn("flex items-center gap-3 text-xs font-mono text-text-2", store.view === 'list' && "hidden lg:flex")}>
                                                         <span className="flex items-center gap-1">⏱ {topic.durationMin}m</span>
                                                         <span className="opacity-50">•</span>
@@ -305,7 +306,7 @@ export const Courses = () => {
                                                     </div>
 
                                                     <div className={cn(
-                                                        "w-full py-2.5 rounded-btn glass text-sm font-bold text-white flex justify-center items-center gap-2 transition-all duration-300 relative overflow-hidden",
+                                                        "w-full py-2.5 rounded-btn glass text-sm font-bold text-text-1 flex justify-center items-center gap-2 transition-all duration-300 relative overflow-hidden",
                                                         `group-hover:${MODS.find(m => m.id === topic.moduleId)?.color.replace('bg-', 'bg-[')}group-hover:]` // using standard classes is safer
                                                     )}>
                                                         <div className={cn("absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity", MODS.find(m => m.id === topic.moduleId)?.color)} />
@@ -329,7 +330,7 @@ export const Courses = () => {
                             <div className="w-16 h-16 rounded-full bg-brand-800 flex items-center justify-center mb-4">
                                 <Search className="w-8 h-8 text-text-2" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">No topics found</h3>
+                            <h3 className="text-xl font-bold text-text-1 mb-2">No topics found</h3>
                             <p className="text-text-2 mb-6">We couldn't find anything matching your current filters.</p>
                             <button
                                 onClick={store.resetFilters}

@@ -11,6 +11,15 @@
   --text-secondary: #94A3B8;
   --border-color: rgba(255, 255, 255, 0.08);
   --glass-bg: rgba(255, 255, 255, 0.05);
+
+  --color-brand-900: 15 23 42; 
+  --color-brand-800: 30 41 59; 
+  --color-brand-700: 27 58 107;
+  --color-brand-500: 37 99 235;
+  --color-brand-300: 147 197 253;
+  --color-text-1: 248 250 252;
+  --color-text-2: 148 163 184;
+  --color-border-adaptive: 255 255 255;
 }
 
 html.light {
@@ -21,6 +30,13 @@ html.light {
   --text-secondary: #475569;
   --border-color: rgba(0, 0, 0, 0.08);
   --glass-bg: rgba(255, 255, 255, 0.7);
+
+  --color-brand-900: 241 245 249; 
+  --color-brand-800: 255 255 255; 
+  --color-brand-700: 219 234 254; 
+  --color-text-1: 15 23 42;
+  --color-text-2: 71 85 105;
+  --color-border-adaptive: 0 0 0;
 }
 
 /* ── Global Keyframes (must be outside @layer so inline styles can reference them) ── */
@@ -213,55 +229,6 @@ html.light {
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.22);
-  }
-
-  /* ── Light mode token overrides ────────────────────────────────────────── */
-  html.light .bg-brand-900 {
-    background-color: var(--bg-primary) !important;
-  }
-
-  html.light .bg-brand-800 {
-    background-color: var(--bg-secondary) !important;
-  }
-
-  html.light .bg-brand-800\/50 {
-    background-color: rgba(255, 255, 255, 0.6) !important;
-  }
-
-  html.light .bg-brand-900\/50 {
-    background-color: rgba(241, 245, 249, 0.8) !important;
-  }
-
-  html.light .bg-brand-900\/20 {
-    background-color: rgba(241, 245, 249, 0.5) !important;
-  }
-
-  html.light .bg-brand-900\/30 {
-    background-color: rgba(241, 245, 249, 0.7) !important;
-  }
-
-  html.light .text-text-1 {
-    color: var(--text-primary) !important;
-  }
-
-  html.light .text-text-2 {
-    color: var(--text-secondary) !important;
-  }
-
-  html.light .text-white {
-    color: #0F172A !important;
-  }
-
-  html.light .border-white\/5 {
-    border-color: rgba(0, 0, 0, 0.05) !important;
-  }
-
-  html.light .border-white\/10 {
-    border-color: rgba(0, 0, 0, 0.08) !important;
-  }
-
-  html.light .border-white\/20 {
-    border-color: rgba(0, 0, 0, 0.12) !important;
   }
 
   html.light main {

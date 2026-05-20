@@ -1,6 +1,6 @@
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 export type Language = 'C++' | 'Java' | 'Python' | 'C';
-export type ModuleId = 'fundamentals' | 'oop' | 'data-structures' | 'advanced-ds';
+export type ModuleId = 'prerequisite' | 'beginner' | 'oop' | 'data-structures' | 'advanced-ds';
 
 export interface Topic {
     id: string;
@@ -16,10 +16,13 @@ export interface Topic {
 
 const allLanguages: Language[] = ['C++', 'Java', 'Python', 'C'];
 
-const fundamentals: string[] = [
-    'Intro to Programming', 'Variables & Data Types', 'Operators & Expressions', 'Input/Output',
-    'Control Flow — Conditionals', 'Control Flow — Loops', 'Functions & Scope', 'Recursion',
-    'Arrays 1D & 2D', 'Strings', 'Pointers & References', 'Dynamic Memory Allocation', 'File I/O'
+const prerequisite: string[] = [
+    'C++ Install Guide', 'Variables', 'Data Types', 'Input/Output', 'Syntax'
+];
+
+const beginner: string[] = [
+    'What is Data Structure (Static/Dynamic)', 'Control Statements', 'Loops', 'Arrays',
+    'Arrays & Strings', 'Pointers', 'By Value vs By Reference', 'Structures', 'STL & Complexity'
 ];
 
 const oop: string[] = [
@@ -55,8 +58,9 @@ const createTopics = (list: string[], moduleId: ModuleId, moduleName: string, mo
 };
 
 export const topics: Topic[] = [
-    ...createTopics(fundamentals, 'fundamentals', 'Fundamentals', 'brand-500', 'Beginner'),
-    ...createTopics(oop, 'oop', 'OOP', 'green', 'Intermediate'),
+    ...createTopics(prerequisite, 'prerequisite', 'Prerequisites', 'brand-500', 'Beginner'),
+    ...createTopics(beginner, 'beginner', 'Beginner DSA', 'green', 'Beginner'),
+    ...createTopics(oop, 'oop', 'OOP', 'purple', 'Intermediate'),
     ...createTopics(dataStructures, 'data-structures', 'Data Structures', 'amber', 'Intermediate'),
-    ...createTopics(advancedDs, 'advanced-ds', 'Advanced DS', 'purple', 'Advanced')
+    ...createTopics(advancedDs, 'advanced-ds', 'Advanced DS', 'rose', 'Advanced')
 ];

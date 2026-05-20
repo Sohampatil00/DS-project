@@ -17,13 +17,13 @@ const languages = ['C++', 'Java', 'Python', 'C'];
 export const Navbar = () => {
     const { theme, toggleTheme } = useStore();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [activeLang, setActiveLang] = useState('Python');
+    const [activeLang, setActiveLang] = useState('C++');
 
     return (
-        <nav className="fixed top-0 w-full h-16 z-40 glass border-b border-white/5 flex items-center justify-between px-4 lg:px-8">
+        <nav className="fixed top-0 w-full h-16 z-40 glass border-b border-borderAdaptive/5 flex items-center justify-between px-4 lg:px-8">
             {/* Left: Logo */}
             <NavLink to="/" className="flex items-center text-2xl tracking-tight">
-                <span className="text-white font-bold">Code</span>
+                <span className="text-text-1 font-bold">Code</span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-purple animate-gradient font-bold">
                     Viz
                 </span>
@@ -36,8 +36,8 @@ export const Navbar = () => {
                         key={link.path}
                         to={link.path}
                         className={({ isActive }) => cn(
-                            "relative text-sm font-medium transition-colors hover:text-white",
-                            isActive ? "text-white" : "text-text-2"
+                            "relative text-sm font-medium transition-colors hover:text-text-1",
+                            isActive ? "text-text-1" : "text-text-2"
                         )}
                     >
                         {({ isActive }) => (
@@ -66,7 +66,7 @@ export const Navbar = () => {
                             onClick={() => setActiveLang(lang)}
                             className={cn(
                                 "relative px-3 py-1 text-xs font-mono transition-colors rounded-full z-10",
-                                activeLang === lang ? "text-white" : "text-text-2 hover:text-white"
+                                activeLang === lang ? "text-text-1" : "text-text-2 hover:text-text-1"
                             )}
                         >
                             {activeLang === lang && (
@@ -97,13 +97,13 @@ export const Navbar = () => {
                     </AnimatePresence>
                 </button>
 
-                <NavLink to="/login" className="text-text-2 hover:text-white text-sm font-medium transition-colors px-2 py-1.5">
+                <NavLink to="/login" className="text-text-2 hover:text-text-1 text-sm font-medium transition-colors px-2 py-1.5">
                     Log In
                 </NavLink>
                 <NavLink to="/signup"
                     className="bg-cta-gradient px-4 py-1.5 rounded-btn text-sm font-medium text-white hover:shadow-glow transition-shadow overflow-hidden relative group">
                     <span className="relative z-10">Sign Up Free</span>
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                    <div className="absolute inset-0 bg-borderAdaptive/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                 </NavLink>
             </div>
 
@@ -126,7 +126,7 @@ export const Navbar = () => {
                     >
                         <div className="flex justify-between items-center mb-8">
                             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-500 to-purple">CodeViz</span>
-                            <button onClick={() => setMobileMenuOpen(false)} className="text-text-2 hover:text-white">
+                            <button onClick={() => setMobileMenuOpen(false)} className="text-text-2 hover:text-text-1">
                                 <X className="w-8 h-8" />
                             </button>
                         </div>
@@ -142,7 +142,7 @@ export const Navbar = () => {
                                     <NavLink
                                         to={link.path}
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className={({ isActive }) => cn("block", isActive ? "text-white" : "text-text-2")}
+                                        className={({ isActive }) => cn("block", isActive ? "text-text-1" : "text-text-2")}
                                     >
                                         {link.name}
                                     </NavLink>

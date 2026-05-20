@@ -33,12 +33,10 @@ export const SortingRaceVisualizer: React.FC = () => {
     const [speedMs, setSpeedMs] = useState(60);
     const [algos, setAlgos] = useState<AlgoState[]>([]);
     const [racing, setRacing] = useState(false);
-    const [winnerId, setWinnerId] = useState<number | null>(null);
     const stopRef = useRef(false);
 
     const generateNew = () => {
         const arr = randomArray(arraySize);
-        setWinnerId(null);
         setRacing(false);
         stopRef.current = true;
         setTimeout(() => {
@@ -63,7 +61,6 @@ export const SortingRaceVisualizer: React.FC = () => {
         const updated = prev.map((a, i) => i === idx ? { ...a, done: true, bars: a.bars.map((b) => ({ ...b, state: 'sorted' as BarState })) } : a);
         const doneCount = updated.filter(a => a.done).length;
         if (doneCount === 1) {
-            setWinnerId(idx);
             return updated.map((a, i) => i === idx ? { ...a, winner: true } : a);
         }
         return updated;
@@ -82,7 +79,7 @@ export const SortingRaceVisualizer: React.FC = () => {
                 if (a[j] > a[j + 1]) {
                     [a[j], a[j + 1]] = [a[j + 1], a[j]];
                     swps++;
-                    updateAlgo(idx, (s) => ({ bars: a.map((v, k) => ({ value: v, state: (k === j || k === j + 1) ? 'swapping' : k >= n - i ? 'sorted' : 'unsorted' as BarState })), swaps: swps }));
+                    updateAlgo(idx, () => ({ bars: a.map((v, k) => ({ value: v, state: (k === j || k === j + 1) ? 'swapping' : k >= n - i ? 'sorted' : 'unsorted' as BarState })), swaps: swps }));
                     await sleep(speedMs);
                 }
             }
@@ -99,14 +96,14 @@ export const SortingRaceVisualizer: React.FC = () => {
             for (let j = i + 1; j < n; j++) {
                 if (stopRef.current) return;
                 comps++;
-                updateAlgo(idx, (s) => ({ bars: a.map((v, k) => ({ value: v, state: k === j || k === minIdx ? 'comparing' : k < i ? 'sorted' : 'unsorted' as BarState })), comparisons: comps }));
+                updateAlgo(idx, () => ({ bars: a.map((v, k) => ({ value: v, state: k === j || k === minIdx ? 'comparing' : k < i ? 'sorted' : 'unsorted' as BarState })), comparisons: comps }));
                 await sleep(speedMs);
                 if (a[j] < a[minIdx]) minIdx = j;
             }
             if (minIdx !== i) {
                 [a[i], a[minIdx]] = [a[minIdx], a[i]];
                 swps++;
-                updateAlgo(idx, (s) => ({ bars: a.map((v, k) => ({ value: v, state: k === i || k === minIdx ? 'swapping' : k <= i ? 'sorted' : 'unsorted' as BarState })), swaps: swps }));
+                updateAlgo(idx, () => ({ bars: a.map((v, k) => ({ value: v, state: k === i || k === minIdx ? 'swapping' : k <= i ? 'sorted' : 'unsorted' as BarState })), swaps: swps }));
                 await sleep(speedMs);
             }
         }
@@ -195,7 +192,6 @@ export const SortingRaceVisualizer: React.FC = () => {
     const startRace = () => {
         if (algos.length === 0) return;
         setRacing(true);
-        setWinnerId(null);
         stopRef.current = false;
         const runners = [runBubble, runSelection, runInsertion, runMerge, runQuick];
         algos.forEach((algo, idx) => runners[idx](idx, algo.bars.map((b) => b.value)));
@@ -205,13 +201,13 @@ export const SortingRaceVisualizer: React.FC = () => {
         <div className="flex flex-col gap-5">
             {/* Controls */}
             <div className="flex flex-wrap gap-3 items-center">
-                <button onClick={generateNew} className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-800 hover:bg-brand-700 border border-white/10 text-white text-xs font-bold rounded-btn transition-colors">
+                <button onClick={generateNew} className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-800 hover:bg-brand-700 border border-borderAdaptive/10 text-white text-xs font-bold rounded-btn transition-colors">
                     🎲 New Array
                 </button>
                 <div className="flex items-center gap-2 text-xs text-text-2">
                     <span>Size:</span>
                     <input type="range" min={8} max={40} value={arraySize} onChange={(e) => setArraySize(+e.target.value)} className="w-24 accent-brand-500" />
-                    <span className="text-white font-mono w-4">{arraySize}</span>
+                    <span className="text-text-1 font-mono w-4">{arraySize}</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-text-2">
                     <span>Speed:</span>
@@ -228,7 +224,7 @@ export const SortingRaceVisualizer: React.FC = () => {
 
             {/* Charts */}
             <div className="flex gap-3 overflow-x-auto pb-2">
-                {algos.map((algo, idx) => (
+                {algos.map((algo) => (
                     <div key={algo.name} className="flex-1 min-w-[140px] flex flex-col gap-2 relative">
                         {/* Winner crown */}
                         <AnimatePresence>
@@ -244,7 +240,7 @@ export const SortingRaceVisualizer: React.FC = () => {
                         </AnimatePresence>
 
                         <div
-                            className="flex items-end gap-px rounded-card overflow-hidden border border-white/5"
+                            className="flex items-end gap-px rounded-card overflow-hidden border border-borderAdaptive/5"
                             style={{ background: '#080C10', height: 120, padding: '4px 6px' }}
                         >
                             {algo.bars.map((bar, i) => (
@@ -263,7 +259,7 @@ export const SortingRaceVisualizer: React.FC = () => {
                         </div>
 
                         <div className="text-center">
-                            <p className={`text-xs font-bold ${algo.winner ? 'text-amber' : 'text-white'}`}>{algo.name}</p>
+                            <p className={`text-xs font-bold ${algo.winner ? 'text-amber' : 'text-text-1'}`}>{algo.name}</p>
                             <p className="text-[10px] text-text-2 font-mono mt-0.5">
                                 C: <span className="text-brand-300">{algo.comparisons}</span>  S: <span className="text-rose">{algo.swaps}</span>
                             </p>

@@ -9,20 +9,21 @@ export default {
     extend: {
       colors: {
         brand: {
-          900: '#0F172A',
-          800: '#1E293B',
-          700: '#1B3A6B',
-          500: '#2563EB',
-          300: '#93C5FD',
+          900: 'rgb(var(--color-brand-900) / <alpha-value>)',
+          800: 'rgb(var(--color-brand-800) / <alpha-value>)',
+          700: 'rgb(var(--color-brand-700) / <alpha-value>)',
+          500: 'rgb(var(--color-brand-500) / <alpha-value>)',
+          300: 'rgb(var(--color-brand-300) / <alpha-value>)',
         },
         amber: '#F59E0B',
         green: '#10B981',
         purple: '#8B5CF6',
         rose: '#F43F5E',
         text: {
-          1: '#F8FAFC',
-          2: '#94A3B8',
-        }
+          1: 'rgb(var(--color-text-1) / <alpha-value>)',
+          2: 'rgb(var(--color-text-2) / <alpha-value>)',
+        },
+        borderAdaptive: 'rgb(var(--color-border-adaptive) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

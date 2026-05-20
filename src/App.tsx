@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Layout } from './components/Layout';
 
@@ -45,7 +45,7 @@ const PageSkeleton: React.FC = () => (
 
 // ── Layout wrapper as outlet ──────────────────────────────────────────────────
 const LayoutOutlet: React.FC = () => (
-  <Layout><Outlet /></Layout>
+  <Layout />
 );
 
 // ── Inner router that reads location ─────────────────────────────────────────
