@@ -5,16 +5,34 @@ import { LinkedListVisualizer } from './LinkedListVisualizer';
 import { BSTVisualizer } from './BSTVisualizer';
 import { SortingRaceVisualizer } from './SortingRaceVisualizer';
 
+export const VisualizerContext = React.createContext<{
+    step: number;
+    setStep: React.Dispatch<React.SetStateAction<number>>;
+} | null>(null);
+
 // ─── Shared hook: step through an array of frames ────────────────────────────
 function useSteps(count: number, playing: boolean, msPerStep: number) {
-    const [step, setStep] = useState(0);
-    useEffect(() => {
+    const ctx = React.useContext(VisualizerContext);
+    const [localStep, setLocalStep] = React.useState(0);
+    
+    const step = ctx ? ctx.step : localStep;
+    const setStep = ctx ? ctx.setStep : setLocalStep;
+
+    React.useEffect(() => {
         if (!playing) return;
-        const id = setInterval(() => setStep(s => (s + 1) % count), msPerStep);
+        const id = setInterval(() => {
+            setStep(s => (s + 1) % count);
+        }, msPerStep);
         return () => clearInterval(id);
-    }, [playing, msPerStep, count]);
-    // reset to 0 when topic changes
-    useEffect(() => { setStep(0); }, [count]);
+    }, [playing, msPerStep, count, setStep]);
+
+    // reset local step only if not controlled
+    React.useEffect(() => {
+        if (!ctx) {
+            setLocalStep(0);
+        }
+    }, [count, !!ctx]);
+
     return [step, setStep] as const;
 }
 
@@ -93,14 +111,15 @@ const InstallGuideVis: React.FC<{ playing: boolean; speed: number; onStepChange?
 // ─────────────────────────────────────────────────────────────────────────────
 const VariablesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const vars = [
-        { name: 'age', type: 'int', value: '25', addr: '0x7ffd04', desc: '4 Bytes allocated, value set to 25' },
-        { name: 'height', type: 'float', value: '5.9f', addr: '0x7ffd08', desc: '4 Bytes allocated, value set to 5.9' },
-        { name: 'name', type: 'string', value: '"Alice"', addr: '0x7ffd0c', desc: 'Dynamic text stored at address 0x7ffd0c' },
-        { name: 'age', type: 'int', value: '26', addr: '0x7ffd04', desc: 'Reassigned age to 26 (overwrites old cell value)', update: true },
-        { name: 'isStudent', type: 'bool', value: 'true', addr: '0x7ffd10', desc: '1 Byte allocated, value set to true' }
+        { name: 'none', type: 'none', value: '', addr: '', desc: 'Memory space is reserved. Variables are not yet declared.' },
+        { name: 'age', type: 'int', value: '25', addr: '0x7ffd04', desc: '4 Bytes allocated for age, value set to 25.' },
+        { name: 'height', type: 'float', value: '5.9f', addr: '0x7ffd08', desc: '4 Bytes allocated for height, value set to 5.9.' },
+        { name: 'name', type: 'string', value: '"Alice"', addr: '0x7ffd0c', desc: 'String variable name allocated, value set to "Alice".' },
+        { name: 'cout', type: 'ostream', value: 'stdout', addr: '0x7ffd04', desc: 'cout reads from memory and prints: age: 25, height: 5.9, name: Alice.' },
+        { name: 'all', type: 'summary', value: 'done', addr: '', desc: 'Variables are stored with a name, type, value, and memory address.' }
     ];
     const [step] = useSteps(vars.length, playing, Math.round(2000 / speed));
-    const cur = vars[step];
+    const cur = vars[step] || vars[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -115,12 +134,11 @@ const VariablesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
             
             <div className="flex flex-col gap-2">
                 {[
-                    { name: 'age', type: 'int', addr: '0x7ffd04', color: '#3B82F6', values: ['25', '25', '25', '26', '26'] },
-                    { name: 'height', type: 'float', addr: '0x7ffd08', color: '#F59E0B', values: ['(garbage)', '5.9f', '5.9f', '5.9f', '5.9f'] },
-                    { name: 'name', type: 'string', addr: '0x7ffd0c', color: '#10B981', values: ['(garbage)', '(garbage)', '"Alice"', '"Alice"', '"Alice"'] },
-                    { name: 'isStudent', type: 'bool', addr: '0x7ffd10', color: '#A78BFA', values: ['(garbage)', '(garbage)', '(garbage)', '(garbage)', 'true'] }
+                    { name: 'age', type: 'int', addr: '0x7ffd04', color: '#3B82F6', values: ['(garbage)', '25', '25', '25', '25', '25'] },
+                    { name: 'height', type: 'float', addr: '0x7ffd08', color: '#F59E0B', values: ['(garbage)', '(garbage)', '5.9f', '5.9f', '5.9f', '5.9f'] },
+                    { name: 'name', type: 'string', addr: '0x7ffd0c', color: '#10B981', values: ['(garbage)', '(garbage)', '(garbage)', '"Alice"', '"Alice"', '"Alice"'] }
                 ].map((v) => {
-                    const cellVal = v.values[step];
+                    const cellVal = v.values[step] || '(garbage)';
                     const isActive = cur.name === v.name;
                     const isGarbage = cellVal.includes('garbage');
                     
@@ -162,13 +180,13 @@ const VariablesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
 // ─────────────────────────────────────────────────────────────────────────────
 const DataTypesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const types = [
-        { name: 'char', bytes: 1, color: '#10B981', val: "'Z'", desc: '1 Byte. Primarily used to store characters, fits ASCII bounds.' },
-        { name: 'bool', bytes: 1, color: '#A78BFA', val: 'true', desc: '1 Byte. Holds true (1) or false (0). Uses full byte due to addressing limits.' },
         { name: 'int', bytes: 4, color: '#3B82F6', val: '42', desc: '4 Bytes. Renders integer numeric values up to ~2 billion.' },
         { name: 'float', bytes: 4, color: '#F59E0B', val: '3.14f', desc: '4 Bytes. Floating point representation, utilizes IEEE 754 format.' },
-        { name: 'double', bytes: 8, color: '#EC4899', val: '2.71828', desc: '8 Bytes. Double precision float, fits 15 decimal digits.' }
+        { name: 'double', bytes: 8, color: '#EC4899', val: '2.71828', desc: '8 Bytes. Double precision float, fits 15 decimal digits.' },
+        { name: 'char', bytes: 1, color: '#10B981', val: "'Z'", desc: '1 Byte. Primarily used to store characters, fits ASCII bounds.' },
+        { name: 'bool', bytes: 1, color: '#A78BFA', val: 'true', desc: '1 Byte. Holds true (1) or false (0). Uses full byte due to addressing limits.' }
     ];
-    const [step] = useSteps(types.length + 1, playing, Math.round(2000 / speed));
+    const [step] = useSteps(7, playing, Math.round(2000 / speed));
 
     useEffect(() => {
         onStepChange?.(step);
@@ -182,9 +200,13 @@ const DataTypesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
                         <motion.span key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-xs text-[#475569]">
                             C++ Datatypes relative sizes in RAM bytes
                         </motion.span>
+                    ) : step === 6 ? (
+                        <motion.span key="sizeof" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-xs text-brand-400">
+                            The sizeof operator lets you check exactly how many bytes each type occupies on your system.
+                        </motion.span>
                     ) : (
                         <motion.div key={step} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-text-1">
-                            <span className="font-bold" style={{ color: types[step - 1].color }}>{types[step - 1].name.toUpperCase()}</span>: {types[step - 1].desc}
+                            <span className="font-bold" style={{ color: types[step - 1]?.color }}>{types[step - 1]?.name.toUpperCase()}</span>: {types[step - 1]?.desc}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -239,15 +261,16 @@ const DataTypesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
 // ─────────────────────────────────────────────────────────────────────────────
 const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const frames = [
-        { label: 'Standard Streams Ready', active: '' },
-        { label: 'cin stream reads: User enters integers "3" and "7"', active: 'cin' },
-        { label: 'Variables loaded: a = 3, b = 7', active: 'mem' },
-        { label: 'Sum computed inside ALU: a + b = 10', active: 'alu' },
-        { label: 'cout stream pushes "10" toward Terminal Screen', active: 'cout' },
-        { label: 'Output printed to Monitor Screen: 10', active: 'stdout' },
+        { label: 'Standard Streams Ready: Let\'s input and output data.', active: '' },
+        { label: 'Include iostream header: standard input & output streams initialized.', active: '' },
+        { label: 'cin extraction: waiting for user input "3" and "7" from keyboard.', active: 'cin' },
+        { label: 'Memory allocated: variables a = 3, b = 7 stored in RAM.', active: 'mem' },
+        { label: 'ALU execution: a + b computed inside ALU, result is 10.', active: 'alu' },
+        { label: 'cout insertion: push value 10 to standard output stream.', active: 'cout' },
+        { label: 'Output displayed: value 10 printed to the terminal screen.', active: 'stdout' },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2200 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -282,13 +305,13 @@ const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
                     <span className="absolute -top-3.5 left-3 text-[8px] text-amber">RAM Segment</span>
                     <div className="flex justify-between items-center text-[10px]">
                         <span className="text-[#475569]">a:</span>
-                        <span className="font-bold text-amber">{step >= 2 ? '3' : '(garbage)'}</span>
+                        <span className="font-bold text-amber">{step >= 3 ? '3' : '(garbage)'}</span>
                     </div>
                     <div className="flex justify-between items-center text-[10px]">
                         <span className="text-[#475569]">b:</span>
-                        <span className="font-bold text-amber">{step >= 2 ? '7' : '(garbage)'}</span>
+                        <span className="font-bold text-amber">{step >= 3 ? '7' : '(garbage)'}</span>
                     </div>
-                    {step >= 3 && (
+                    {step >= 4 && (
                         <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-amber text-[#090D16] font-bold text-[8px] px-1.5 rounded">
                             SUM = 10
                         </motion.div>
@@ -311,7 +334,7 @@ const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
                 {/* Terminal / stdout */}
                 <div className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center border-2 ${cur.active === 'stdout' ? 'border-emerald-500 bg-emerald-500/10' : 'border-slate-800 bg-[#090D16]'}`}>
                     <span className="text-[9px] text-[#475569]">stdout</span>
-                    <span className="text-sm font-bold text-emerald-400">{step >= 5 ? '10' : ''}</span>
+                    <span className="text-sm font-bold text-emerald-400">{step >= 6 ? '10' : ''}</span>
                 </div>
             </div>
 
@@ -420,15 +443,16 @@ const SyntaxVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: 
 // ─────────────────────────────────────────────────────────────────────────────
 const DSClassificationVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const frames = [
-        { label: 'Data structures: systematic methods of arranging variables.', activeNode: 'root' },
+        { label: 'Data structures: systematic methods of arranging variables in memory.', activeNode: 'root' },
         { label: 'Broad classification: Linear vs Non-Linear structures.', activeNode: 'linear-nonlinear' },
-        { label: 'Linear structures: sequential sequences of elements.', activeNode: 'linear' },
-        { label: 'Non-Linear structures: nested, hierarchical, or network nodes.', activeNode: 'nonlinear' },
-        { label: 'Static arrays: fixed-length memory blocks allocated consecutively.', activeNode: 'static' },
-        { label: 'Dynamic collections: grows/shrinks by mapping pointers in heap memory.', activeNode: 'dynamic' },
+        { label: 'Linear structures: sequential elements (Arrays, Linked Lists, Stacks, Queues).', activeNode: 'linear' },
+        { label: 'Non-Linear structures: hierarchical or networked nodes (Trees, Graphs).', activeNode: 'nonlinear' },
+        { label: 'Static data structures: fixed-length memory allocated consecutively (Arrays).', activeNode: 'static' },
+        { label: 'Dynamic data structures: grows and shrinks in heap memory (Vectors).', activeNode: 'dynamic' },
+        { label: 'Algorithmic efficiency: select the right structure to maximize performance.', activeNode: 'root' },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2300 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -514,14 +538,15 @@ const DSClassificationVis: React.FC<{ playing: boolean; speed: number; onStepCha
 // ─────────────────────────────────────────────────────────────────────────────
 const ConditionalsVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const frames = [
-        { label: 'Conditionals: program decides action path via criteria check.', active: 'check' },
-        { label: 'Evaluating: is -5 > 0 ? (No → Evaluate next branch)', active: 'pos' },
-        { label: 'Evaluating: is -5 < 0 ? (Yes → Enter this branch)', active: 'neg' },
-        { label: 'Execute statement in Negative branch block.', active: 'exec' },
-        { label: 'Output printed: Negative', active: 'out' },
+        { label: 'Conditionals: program decides action path via criteria check.', active: 'intro' },
+        { label: 'We read an integer from the user. Let\'s evaluate n = -5.', active: 'check' },
+        { label: 'Evaluating first branch: is -5 > 0 ? (No → Skip branch)', active: 'pos' },
+        { label: 'Evaluating second branch: is -5 < 0 ? (Yes → Enter branch)', active: 'neg' },
+        { label: 'Execute branch block: print "Negative" and bypass all remaining options.', active: 'exec' },
+        { label: 'Execution complete: program selected exactly one path through the branches.', active: 'out' },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2200 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -542,11 +567,11 @@ const ConditionalsVis: React.FC<{ playing: boolean; speed: number; onStepChange?
                 {/* Branches */}
                 <div className="flex flex-col gap-2 text-[10px]">
                     {[
-                        { cond: 'n > 0', label: 'Positive', activeIdx: 1, color: '#10B981' },
-                        { cond: 'n < 0', label: 'Negative', activeIdx: 2, color: '#F43F5E' },
-                        { cond: 'else', label: 'Zero', activeIdx: -1, color: '#F59E0B' }
+                        { cond: 'n > 0', label: 'Positive', color: '#10B981' },
+                        { cond: 'n < 0', label: 'Negative', color: '#F43F5E' },
+                        { cond: 'else', label: 'Zero', color: '#F59E0B' }
                     ].map(b => {
-                        const active = step === b.activeIdx || (b.label === 'Negative' && step >= 2);
+                        const active = (b.label === 'Positive' && step === 2) || (b.label === 'Negative' && step >= 3);
                         return (
                             <motion.div
                                 key={b.label}
@@ -589,16 +614,18 @@ const ConditionalsVis: React.FC<{ playing: boolean; speed: number; onStepChange?
 // ─────────────────────────────────────────────────────────────────────────────
 const LoopVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const frames = [
-        { label: 'Loop starts. Initialize loop counter i = 2.', i: 2, condition: '2 <= 10 ? True', out: [] },
-        { label: 'Loop executes: print 2. Update i += 2 (i becomes 4).', i: 4, condition: '4 <= 10 ? True', out: [2] },
-        { label: 'Loop executes: print 4. Update i += 2 (i becomes 6).', i: 6, condition: '6 <= 10 ? True', out: [2, 4] },
-        { label: 'Loop executes: print 6. Update i += 2 (i becomes 8).', i: 8, condition: '8 <= 10 ? True', out: [2, 4, 6] },
-        { label: 'Loop executes: print 8. Update i += 2 (i becomes 10).', i: 10, condition: '10 <= 10 ? True', out: [2, 4, 6, 8] },
-        { label: 'Loop executes: print 10. Update i += 2 (i becomes 12).', i: 12, condition: '12 <= 10 ? False', out: [2, 4, 6, 8, 10] },
-        { label: 'Condition checked as False. Loop terminates.', i: 12, condition: 'End of Loop', out: [2, 4, 6, 8, 10] },
+        { label: 'Loops let us repeat code without writing it multiple times.', i: '?', condition: 'Ready', out: [] },
+        { label: 'A for loop has three parts: initialization, condition, and update.', i: '?', condition: 'Ready', out: [] },
+        { label: 'We start with i equals 2. This is our initialization.', i: 2, condition: 'Initialized', out: [] },
+        { label: 'The condition checks: is i less than or equal to n? If yes, we enter the loop body.', i: 2, condition: '2 <= 10 ? True', out: [] },
+        { label: 'We print the value of i, which is 2. The update step adds 2 to i. Now i is 4.', i: 4, condition: '4 <= 10 ? True', out: [2] },
+        { label: 'We check again: is 4 <= 10? Yes! Print 4. Update: i becomes 6.', i: 6, condition: '6 <= 10 ? True', out: [2, 4] },
+        { label: 'This continues: print 6, 8, and 10. When i becomes 12, the condition checks as False.', i: 12, condition: '12 <= 10 ? False', out: [2, 4, 6, 8, 10] },
+        { label: 'Condition checked as False. The loop terminates.', i: 12, condition: 'End of Loop', out: [2, 4, 6, 8, 10] },
+        { label: 'The loop ran 5 times, printing all even numbers from 2 to 10.', i: 12, condition: 'Finished', out: [2, 4, 6, 8, 10] },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2000 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -648,16 +675,17 @@ const LoopVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: nu
 const ArrayVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const arr = [3, 1, 4, 1, 5];
     const frames = [
-        { label: 'Array allocated contiguous on stack at indexes 0 to 4.', curIdx: -1, max: 3 },
-        { label: 'Set initial maxVal = arr[0] (value 3).', curIdx: 0, max: 3 },
-        { label: 'Scan index 1: arr[1] (1) < 3. Max remains 3.', curIdx: 1, max: 3 },
-        { label: 'Scan index 2: arr[2] (4) > 3. Update maxVal = 4!', curIdx: 2, max: 4 },
-        { label: 'Scan index 3: arr[3] (1) < 4. Max remains 4.', curIdx: 3, max: 4 },
-        { label: 'Scan index 4: arr[4] (5) > 4. Update maxVal = 5!', curIdx: 4, max: 5 },
-        { label: 'Scan complete. Max element in array is 5.', curIdx: -1, max: 5 },
+        { label: 'An array stores multiple values of the same type in consecutive memory locations.', curIdx: -1, max: 3 },
+        { label: 'We declare an array of integers. Each element lives next to the other in memory.', curIdx: -1, max: 3 },
+        { label: 'We read 5 values: 3, 1, 4, 1, 5. They go into indices 0 through 4.', curIdx: -1, max: 3 },
+        { label: 'To find the maximum, we start by assuming the first element is the largest (max = 3).', curIdx: 0, max: 3 },
+        { label: 'Compare elements: arr[1] (1) < 3 (no change). arr[2] (4) > 3 → Update max to 4!', curIdx: 2, max: 4 },
+        { label: 'Compare elements: arr[3] (1) < 4 (no change). arr[4] (5) > 4 → Update max to 5!', curIdx: 4, max: 5 },
+        { label: 'We have scanned the entire array. The maximum value is 5.', curIdx: -1, max: 5 },
+        { label: 'Array random access is O(1). Finding the max element requires O(n) linear scan.', curIdx: -1, max: 5 },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2100 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -669,7 +697,7 @@ const ArrayVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: n
             <div className="flex gap-2">
                 {arr.map((val, idx) => {
                     const isScanning = cur.curIdx === idx;
-                    const isMax = cur.max === val && step >= 1;
+                    const isMax = cur.max === val && step >= 3;
                     
                     return (
                         <div key={idx} className="flex flex-col items-center gap-1">
@@ -695,7 +723,7 @@ const ArrayVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: n
             <div className="px-4 py-2 border border-brand-500/10 bg-brand-950/20 rounded-xl flex gap-4 text-xs">
                 <div>
                     <span className="text-[#475569]">maxVal: </span>
-                    <motion.span key={cur.max} initial={{ scale: 0.6 }} animate={{ scale: 1 }} className="font-bold text-emerald-400">{cur.max}</motion.span>
+                    <motion.span key={cur.max} initial={{ scale: 0.6 }} animate={{ scale: 1 }} className="font-bold text-emerald-400">{step >= 3 ? cur.max : '?'}</motion.span>
                 </div>
             </div>
 
@@ -873,16 +901,17 @@ const PointerVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s:
 // ─────────────────────────────────────────────────────────────────────────────
 const RefValueVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const frames = [
-        { label: 'Compare Pass by Value (Left) vs Pass by Reference (Right).', mode: 'intro', valL: [3, 7], valR: [3, 7] },
-        { label: 'Pass by Value: copies are passed into swapByValue().', mode: 'copy-value', valL: [3, 7], valR: [3, 7] },
-        { label: 'The clones swap inside function stack frame.', mode: 'swapping-value', valL: [7, 3], valR: [3, 7] },
-        { label: 'Function ends, clones deleted. Original Main values unchanged!', mode: 'fail-value', valL: [3, 7], valR: [3, 7] },
-        { label: 'Pass by Reference: aliases mapping to original slots are passed.', mode: 'copy-ref', valL: [3, 7], valR: [3, 7] },
-        { label: 'Swapping occurs directly in the original variables.', mode: 'swapping-ref', valL: [3, 7], valR: [7, 3] },
-        { label: 'Function ends. Original Main values successfully swapped!', mode: 'success-ref', valL: [3, 7], valR: [7, 3] },
+        { label: 'There are two ways to pass arguments to a function: by value and by reference.', mode: 'intro', valL: [3, 7], valR: [3, 7] },
+        { label: 'By value: the function receives a COPY. We call swapByValue with a=3 and b=7.', mode: 'copy-value', valL: [3, 7], valR: [3, 7] },
+        { label: 'Inside the function, the clones/copies are swapped inside its stack frame.', mode: 'swapping-value', valL: [7, 3], valR: [3, 7] },
+        { label: 'Function ends, clones deleted. Original Main values remain completely unchanged!', mode: 'fail-value', valL: [3, 7], valR: [3, 7] },
+        { label: 'By reference: the function receives the ORIGINAL variables using references (int&).', mode: 'copy-ref', valL: [3, 7], valR: [3, 7] },
+        { label: 'Inside the function, we swap the actual values directly in the original locations.', mode: 'swapping-ref', valL: [3, 7], valR: [7, 3] },
+        { label: 'The swap succeeds! Back in main, a is now 7 and b is now 3.', mode: 'success-ref', valL: [3, 7], valR: [7, 3] },
+        { label: 'Use pass-by-reference when functions need to modify arguments or to avoid copying large objects.', mode: 'success-ref', valL: [3, 7], valR: [7, 3] },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2300 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -958,7 +987,7 @@ const RefValueVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
                         </motion.div>
                     )}
 
-                    {cur.mode === 'success-ref' && (
+                    {cur.mode.includes('success') && (
                         <div className="text-[9px] text-green font-bold">Successfully swapped!</div>
                     )}
                 </div>
@@ -979,15 +1008,16 @@ const RefValueVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
 // ─────────────────────────────────────────────────────────────────────────────
 const StructVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: number) => void }> = ({ playing, speed, onStepChange }) => {
     const frames = [
-        { label: 'A Struct defines a blueprint to bundle variables under one name.', active: 'blueprint', values: ['', '', ''] },
-        { label: 'Instantiate Student s. Allocates adjacent segments stacked in RAM.', active: 'alloc', values: ['(garbage)', '(garbage)', '(garbage)'] },
-        { label: 'Set s.name = "Alice" at memory offset +0.', active: 'name', values: ['"Alice"', '(garbage)', '(garbage)'] },
-        { label: 'Set s.age = 20 at memory offset +32 (following padding).', active: 'age', values: ['"Alice"', '20', '(garbage)'] },
-        { label: 'Set s.grade = \'A\' at memory offset +36.', active: 'grade', values: ['"Alice"', '20', "'A'"] },
-        { label: 'Student s completely initialized inside stack memory!', active: 'done', values: ['"Alice"', '20', "'A'"] },
+        { label: 'A Struct groups related variables of different types under one custom name.', active: 'blueprint', values: ['', '', ''] },
+        { label: 'Define a Student struct with three members: name, age, and grade.', active: 'blueprint', values: ['', '', ''] },
+        { label: 'Think of a struct as a blueprint. It describes the format, but does not allocate memory yet.', active: 'blueprint', values: ['', '', ''] },
+        { label: 'Instantiate Student s. The compiler allocates contiguous stacked segments in memory.', active: 'alloc', values: ['(garbage)', '(garbage)', '(garbage)'] },
+        { label: 'Use the dot operator to assign values: s.name = "Alice", s.age = 20, s.grade = \'A\'.', active: 'done', values: ['"Alice"', '20', "'A'"] },
+        { label: 'The dot operator writes each member at its fixed offset from the base address (+0, +32, +36).', active: 'done', values: ['"Alice"', '20', "'A'"] },
+        { label: 'Structs are the foundation of compound datatypes and object-oriented programming classes.', active: 'done', values: ['"Alice"', '20', "'A'"] },
     ];
     const [step] = useSteps(frames.length, playing, Math.round(2200 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
@@ -1006,7 +1036,7 @@ const StructVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: 
                         { label: 's.grade', offset: '+36 Bytes', type: 'char (1B)', color: '#10B981', valIdx: 2 }
                     ].map(member => {
                         const cellVal = cur.values[member.valIdx];
-                        const isActive = cur.active === member.label.split('.')[1];
+                        const isActive = cur.active === 'blueprint' || cur.active === 'done' || cur.active === member.label.split('.')[1];
                         const isGarbage = cellVal === '(garbage)';
                         
                         return (
@@ -1023,7 +1053,7 @@ const StructVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s: 
                                     <span className="text-[8px] text-[#475569]">{member.type} | offset: {member.offset}</span>
                                 </div>
                                 <span className={`font-mono text-xs ${isGarbage ? 'text-text-2 opacity-30 italic' : ''}`} style={{ color: isGarbage ? undefined : member.color }}>
-                                    {step >= 1 ? cellVal : ''}
+                                    {step >= 3 ? cellVal : ''}
                                 </span>
                             </motion.div>
                         );
@@ -1050,31 +1080,34 @@ const STLComplexityVis: React.FC<{ playing: boolean; speed: number; onStepChange
     
     // Auto toggle tabs if playing is on
     const frames = [
-        { label: 'STL holds collections. Vector represents dynamic expanding arrays.', activeSub: 'vector', tab: 'stl' },
-        { label: 'Stack follows LIFO (Last In First Out) push/pop logic.', activeSub: 'stack', tab: 'stl' },
-        { label: 'Queue follows FIFO (First In First Out) enqueue/dequeue logic.', activeSub: 'queue', tab: 'stl' },
-        { label: 'Map stores key-value pairs sorted in Balanced Red-Black Trees.', activeSub: 'map', tab: 'stl' },
-        { label: 'Complexity charts contrast math growth speeds: O(1) up to O(n²).', activeSub: 'vector', tab: 'complexity' },
-        { label: 'Understanding algorithmic curves ensures high performance selections.', activeSub: 'vector', tab: 'complexity' }
+        { label: 'The STL provides ready-made data containers so you do not need to build them from scratch.', activeSub: 'vector', tab: 'stl' },
+        { label: 'A vector is a dynamic array. We push_back 10, 20, and 30. It grows and doubles capacity when full.', activeSub: 'vector', tab: 'stl' },
+        { label: 'Vector access by index is O(1), and push_back is amortized O(1). Very efficient!', activeSub: 'vector', tab: 'stl' },
+        { label: 'A map stores key-value pairs sorted by key. We insert a maps to 1, and b maps to 2.', activeSub: 'map', tab: 'stl' },
+        { label: 'Map operations like insert and lookup take O(log N) because it uses a balanced red-black tree internally.', activeSub: 'map', tab: 'stl' },
+        { label: 'For faster lookups, use unordered_map which uses hashing for O(1) average time.', activeSub: 'map', tab: 'complexity' },
+        { label: 'STL containers all share common methods: size(), empty(), begin(), end(). Learn one, and patterns apply to all.', activeSub: 'vector', tab: 'complexity' }
     ];
     
     const [step] = useSteps(frames.length, playing, Math.round(2400 / speed));
-    const cur = frames[step];
+    const cur = frames[step] || frames[0];
 
     useEffect(() => {
         onStepChange?.(step);
     }, [step, onStepChange]);
 
     useEffect(() => {
-        setActiveTab(cur.tab as 'stl' | 'complexity');
-        if (cur.tab === 'stl') {
-            setSubTab(cur.activeSub as 'vector' | 'stack' | 'queue' | 'map');
+        if (cur) {
+            setActiveTab(cur.tab as 'stl' | 'complexity');
+            if (cur.tab === 'stl') {
+                setSubTab(cur.activeSub as 'vector' | 'stack' | 'queue' | 'map');
+            }
         }
-    }, [step]);
+    }, [step, cur]);
 
     // Vector state simulation
     const vectorElements = [10, 20, 30];
-    const vectorCapacity = subTab === 'vector' && step >= 1 ? 4 : 2;
+    const vectorCapacity = subTab === 'vector' && step >= 2 ? 4 : 2;
 
     return (
         <div className="w-full max-w-md flex flex-col items-center gap-5 select-none font-mono">

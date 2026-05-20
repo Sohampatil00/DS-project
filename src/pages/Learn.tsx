@@ -25,12 +25,14 @@ import { GradientText } from '../components/GradientText';
 import { topics } from '../data/topics';
 import { getTopicContent } from '../data/topicContent';
 import type { LangKey } from '../data/topicContent';
-import { TopicVisualizer } from '../components/visualizers/TopicVisualizer';
+import { TopicVisualizer, VisualizerContext } from '../components/visualizers/TopicVisualizer';
 import { useNarration } from '../hooks/useNarration';
+import type { VoiceProfile } from '../hooks/useNarration';
 import { NarrationControls } from '../components/NarrationControls';
+import { getIndianNarration } from '../lib/hinglishTranslator';
 
 const LANGS: LangKey[] = ['C++', 'Java', 'Python', 'C'];
-const SPEEDS = ['0.5x', '1x', '2x', '4x'];
+const SPEEDS = ['0.5x', '0.75x', '1x', '1.25x', '1.5x', '2x'];
 
 const monacoLang = (l: LangKey) => {
     if (l === 'C++') return 'cpp';
@@ -60,6 +62,10 @@ export const Learn = () => {
     const [narrationEnabled, setNarrationEnabled] = useState(() => {
         const saved = localStorage.getItem('narration_enabled');
         return saved ? saved === 'true' : true;
+    });
+    const [narrationVoice, setNarrationVoice] = useState<VoiceProfile>(() => {
+        const saved = localStorage.getItem('narration_voice');
+        return (saved as VoiceProfile) || 'hinglish-classroom';
     });
 
     // Progressive Reveal & Lock States
@@ -135,12 +141,16 @@ export const Learn = () => {
     }, [topic]);
 
     // Hook up narration
-    const narrationText = content.narrationSteps?.[activeStep];
+    const rawNarrationText = content.narrationSteps?.[activeStep];
+    const narrationText = narrationVoice === 'hinglish-classroom' && topic
+        ? getIndianNarration(topic, activeStep, rawNarrationText ?? '')
+        : rawNarrationText;
     const { isSpeaking, isSupported } = useNarration(
         narrationText,
         visPlaying,
         speedNum,
-        narrationEnabled
+        narrationEnabled,
+        narrationVoice
     );
 
     // Module topics for progress
@@ -531,89 +541,198 @@ export const Learn = () => {
 
                             {/* Main visualizer block with absolute blur if locked */}
                             <div className={cn("transition-all duration-500", !simulationUnlocked && "blur-md pointer-events-none select-none opacity-40")}>
-                                {/* Interactive Visualizer Card */}
-                                <div className="border border-borderAdaptive/10 rounded-3xl bg-[#080C10] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden relative group">
-                                    {/* Accent lights */}
-                                    <div className="absolute -top-[150px] -left-[150px] w-[300px] h-[300px] rounded-full bg-brand-500/10 blur-[120px] pointer-events-none" />
-                                    <div className="absolute -bottom-[150px] -right-[150px] w-[300px] h-[300px] rounded-full bg-purple/10 blur-[120px] pointer-events-none" />
-                                    
-                                    <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
-                                    
-                                    <div className="flex items-center justify-between px-6 py-4 border-b border-borderAdaptive/5 bg-brand-950/20">
-                                        <h4 className="text-sm font-bold text-brand-300">
-                                            {topicData?.title ?? topic?.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} Visualizer
-                                        </h4>
-                                        <span className="text-[10px] font-mono text-text-2 bg-brand-900 px-2 py-0.5 rounded border border-borderAdaptive/5">
-                                            Step {activeStep + 1} of {content.narrationSteps?.length ?? 6}
-                                        </span>
-                                    </div>
-
-                                    <div className="min-h-[300px] flex items-center justify-center relative p-8">
-                                        <TopicVisualizer
-                                            topicId={topic ?? ''}
-                                            topicTitle={topicData?.title ?? ''}
-                                            playing={visPlaying && (!narrationEnabled || !isSpeaking)}
-                                            speed={speedNum}
-                                            onStepChange={(s) => {
-                                                setActiveStep(s);
-                                                setSimulationInteracted(true);
-                                                setPracticeUnlocked(true);
-                                            }}
-                                        />
-                                    </div>
-
-                                    {/* Control Bar inside visualizer card */}
-                                    <div className="px-6 py-4 border-t border-borderAdaptive/5 bg-brand-950/40 flex flex-wrap items-center justify-between gap-4">
-                                        {/* Playback Controls */}
-                                        <div className="flex items-center gap-1.5 bg-brand-950/60 px-3 py-1 rounded-full border border-borderAdaptive/5">
-                                            <button onClick={() => { setVisPlaying(false); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95">
-                                                <SkipBack className="w-3.5 h-3.5" />
-                                            </button>
-                                            <button onClick={() => { setVisPlaying(false); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95">
-                                                <Rewind className="w-3.5 h-3.5" />
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setVisPlaying(p => !p);
-                                                    setSimulationInteracted(true);
-                                                    setPracticeUnlocked(true);
-                                                }}
-                                                className="text-text-1 bg-brand-600 hover:bg-brand-500 p-1.5 rounded-full transition-all active:scale-90 mx-1 flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.3)]"
-                                            >
-                                                {visPlaying
-                                                    ? <Pause className="w-3.5 h-3.5 fill-white text-white" />
-                                                    : <Play className="w-3.5 h-3.5 fill-white text-white" />
-                                                }
-                                            </button>
-                                            <button onClick={() => { setVisPlaying(true); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95">
-                                                <FastForward className="w-3.5 h-3.5" />
-                                            </button>
-                                            <button onClick={() => { setVisPlaying(true); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95">
-                                                <SkipForward className="w-3.5 h-3.5" />
-                                            </button>
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {/* Left Panel: Simulation Canvas (2/3 width on large screens) */}
+                                    <div className="lg:col-span-2 flex flex-col border border-borderAdaptive/10 rounded-3xl bg-[#080C10] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden relative group">
+                                        {/* Accent lights */}
+                                        <div className="absolute -top-[150px] -left-[150px] w-[300px] h-[300px] rounded-full bg-brand-500/10 blur-[120px] pointer-events-none" />
+                                        <div className="absolute -bottom-[150px] -right-[150px] w-[300px] h-[300px] rounded-full bg-purple/10 blur-[120px] pointer-events-none" />
+                                        
+                                        <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
+                                        
+                                        <div className="flex items-center justify-between px-6 py-4 border-b border-borderAdaptive/5 bg-brand-950/20">
+                                            <h4 className="text-sm font-bold text-brand-300">
+                                                {topicData?.title ?? topic?.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} Simulation
+                                            </h4>
+                                            <span className="text-[10px] font-mono text-text-2 bg-brand-900 px-2 py-0.5 rounded border border-borderAdaptive/5">
+                                                Step {activeStep + 1} of {content.narrationSteps?.length ?? 6}
+                                            </span>
                                         </div>
 
-                                        {/* Narration Controls */}
-                                        <div className="flex items-center gap-3 bg-brand-950/60 px-4 py-1.5 rounded-full border border-borderAdaptive/5">
-                                            <NarrationControls
-                                                isSpeaking={isSpeaking}
-                                                isSupported={isSupported}
-                                                enabled={narrationEnabled}
-                                                onToggle={() => setNarrationEnabled(prev => {
-                                                    localStorage.setItem('narration_enabled', String(!prev));
-                                                    return !prev;
-                                                })}
-                                            />
+                                        <div className="min-h-[350px] flex-1 flex items-center justify-center relative p-8">
+                                            <VisualizerContext.Provider value={{ step: activeStep, setStep: setActiveStep }}>
+                                                <TopicVisualizer
+                                                    topicId={topic ?? ''}
+                                                    topicTitle={topicData?.title ?? ''}
+                                                    playing={visPlaying && (!narrationEnabled || !isSpeaking)}
+                                                    speed={speedNum}
+                                                    onStepChange={(s) => {
+                                                        setActiveStep(s);
+                                                        setSimulationInteracted(true);
+                                                        setPracticeUnlocked(true);
+                                                    }}
+                                                />
+                                            </VisualizerContext.Provider>
                                         </div>
 
-                                        {/* Speed Controller */}
-                                        <div className="flex bg-brand-950/60 rounded-full p-0.5 border border-borderAdaptive/5 relative">
-                                            {SPEEDS.map(s => (
-                                                <button key={s} onClick={() => setSpeed(s)} className={cn("px-2.5 py-1 text-[10px] font-bold rounded-full relative z-10 transition-colors", speed === s ? "text-text-1" : "text-text-2 hover:text-text-1")}>
-                                                    {speed === s && <motion.div layoutId="speed-pill" className="absolute inset-0 bg-brand-700/80 rounded-full -z-10" />}
-                                                    {s}
+                                        {/* Control Bar inside visualizer card */}
+                                        <div className="px-6 py-4 border-t border-borderAdaptive/5 bg-brand-950/40 flex flex-wrap items-center justify-between gap-4 mt-auto">
+                                            {/* Playback Controls */}
+                                            <div className="flex items-center gap-1.5 bg-brand-950/60 px-3 py-1 rounded-full border border-borderAdaptive/5">
+                                                <button onClick={() => { setActiveStep(0); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95" title="Jump to start">
+                                                    <SkipBack className="w-3.5 h-3.5" />
                                                 </button>
-                                            ))}
+                                                <button onClick={() => { setActiveStep(s => Math.max(0, s - 1)); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95" title="Previous step">
+                                                    <Rewind className="w-3.5 h-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setVisPlaying(p => !p);
+                                                        setSimulationInteracted(true);
+                                                        setPracticeUnlocked(true);
+                                                    }}
+                                                    className="text-text-1 bg-brand-600 hover:bg-brand-500 p-1.5 rounded-full transition-all active:scale-90 mx-1 flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                                                    title={visPlaying ? "Pause simulation" : "Play simulation"}
+                                                >
+                                                    {visPlaying
+                                                        ? <Pause className="w-3.5 h-3.5 fill-white text-white" />
+                                                        : <Play className="w-3.5 h-3.5 fill-white text-white" />
+                                                    }
+                                                </button>
+                                                <button onClick={() => { setActiveStep(s => Math.min((content.narrationSteps?.length ?? 6) - 1, s + 1)); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95" title="Next step">
+                                                    <FastForward className="w-3.5 h-3.5" />
+                                                </button>
+                                                <button onClick={() => { setActiveStep((content.narrationSteps?.length ?? 6) - 1); setSimulationInteracted(true); setPracticeUnlocked(true); }} className="text-text-2 hover:text-text-1 p-1 rounded transition-colors active:scale-95" title="Jump to end">
+                                                    <SkipForward className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+
+                                            {/* Narration Controls */}
+                                            <div className="flex items-center gap-3">
+                                                <NarrationControls
+                                                    isSpeaking={isSpeaking}
+                                                    isSupported={isSupported}
+                                                    enabled={narrationEnabled}
+                                                    onToggle={() => setNarrationEnabled(prev => {
+                                                        localStorage.setItem('narration_enabled', String(!prev));
+                                                        return !prev;
+                                                    })}
+                                                    voiceProfile={narrationVoice}
+                                                    onVoiceChange={(voice) => {
+                                                        localStorage.setItem('narration_voice', voice);
+                                                        setNarrationVoice(voice);
+                                                    }}
+                                                />
+                                            </div>
+
+                                            {/* Speed Controller */}
+                                            <div className="flex bg-brand-950/60 rounded-full p-0.5 border border-borderAdaptive/5 relative">
+                                                {SPEEDS.map(s => (
+                                                    <button key={s} onClick={() => setSpeed(s)} className={cn("px-2.5 py-1 text-[10px] font-bold rounded-full relative z-10 transition-colors", speed === s ? "text-text-1" : "text-text-2 hover:text-text-1")}>
+                                                        {speed === s && <motion.div layoutId="speed-pill" className="absolute inset-0 bg-brand-700/80 rounded-full -z-10" />}
+                                                        {s}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Right Panel: Narration & Lesson Steps (1/3 width on large screens) */}
+                                    <div className="border border-borderAdaptive/10 rounded-3xl bg-[#080C10]/90 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col h-[500px] lg:h-auto max-h-[600px]">
+                                        <div className="px-6 py-4 border-b border-borderAdaptive/5 bg-brand-950/20 flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <BookOpen className="w-4 h-4 text-brand-400" />
+                                                <h4 className="text-sm font-bold text-brand-300">Explanation Steps</h4>
+                                            </div>
+                                            <span className="text-[9px] uppercase font-mono bg-brand-900/60 border border-brand-500/10 px-2 py-0.5 rounded text-brand-400">
+                                                Interactive
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                                            {content.narrationSteps && content.narrationSteps.length > 0 ? (
+                                                content.narrationSteps.map((stepText, idx) => {
+                                                    const isActive = activeStep === idx;
+                                                    const isHinglish = narrationVoice === 'hinglish-classroom' && topic;
+                                                    const stepDisplay = isHinglish
+                                                        ? getIndianNarration(topic ?? '', idx, stepText)
+                                                        : stepText;
+
+                                                    return (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={() => {
+                                                                setActiveStep(idx);
+                                                                setSimulationInteracted(true);
+                                                                setPracticeUnlocked(true);
+                                                                if (!visPlaying) {
+                                                                    setVisPlaying(true);
+                                                                }
+                                                            }}
+                                                            className={cn(
+                                                                "w-full text-left p-3.5 rounded-2xl border transition-all duration-300 flex gap-3 group relative overflow-hidden",
+                                                                isActive
+                                                                    ? "bg-brand-500/10 border-brand-500/30 shadow-[0_0_20px_rgba(59,130,246,0.08)]"
+                                                                    : "bg-transparent border-borderAdaptive/5 hover:border-brand-500/20 hover:bg-brand-950/10"
+                                                            )}
+                                                        >
+                                                            {/* Glowing active bar */}
+                                                            {isActive && (
+                                                                <motion.div 
+                                                                    layoutId="active-indicator"
+                                                                    className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-500 to-purple rounded-r-full"
+                                                                />
+                                                            )}
+                                                            
+                                                            {/* Step Badge */}
+                                                            <div className={cn(
+                                                                "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-mono font-bold shrink-0 border transition-all",
+                                                                isActive
+                                                                    ? "bg-brand-500/20 border-brand-500 text-brand-300"
+                                                                    : "bg-brand-950/60 border-borderAdaptive/10 text-text-2 group-hover:border-brand-500/40 group-hover:text-brand-300"
+                                                            )}>
+                                                                {idx + 1}
+                                                            </div>
+
+                                                            {/* Step Text & Speaking Wave */}
+                                                            <div className="flex-1 space-y-1">
+                                                                <div className="flex items-center justify-between gap-2">
+                                                                    <span className={cn(
+                                                                        "text-[10px] uppercase font-mono tracking-wider font-bold transition-colors",
+                                                                        isActive ? "text-brand-400" : "text-[#475569] group-hover:text-brand-400/60"
+                                                                    )}>
+                                                                        Step {idx + 1}
+                                                                    </span>
+                                                                    
+                                                                    {isActive && isSpeaking && narrationEnabled && (
+                                                                        <div className="flex items-center gap-0.5 h-3 shrink-0" title="Narrator is speaking">
+                                                                            <span className="w-0.5 h-2 bg-brand-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                                                                            <span className="w-0.5 h-3 bg-brand-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                                                                            <span className="w-0.5 h-1.5 bg-brand-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <p className={cn(
+                                                                    "text-xs leading-relaxed transition-colors",
+                                                                    isActive ? "text-text-1 font-medium" : "text-text-2 group-hover:text-text-1"
+                                                                )}>
+                                                                    {stepDisplay}
+                                                                </p>
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })
+                                            ) : (
+                                                <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-3 select-none font-mono">
+                                                    <div className="w-12 h-12 rounded-2xl bg-brand-500/5 border border-brand-500/10 flex items-center justify-center text-lg text-brand-400 shadow-lg animate-pulse">
+                                                        ℹ️
+                                                    </div>
+                                                    <p className="text-xs text-text-1 font-bold">Interactive Canvas Active</p>
+                                                    <p className="text-[10px] text-text-2 leading-relaxed max-w-[200px]">
+                                                        This advanced topic uses real-time dynamic simulation controls directly on the canvas.
+                                                    </p>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
