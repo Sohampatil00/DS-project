@@ -82,7 +82,7 @@ const InstallGuideVis: React.FC<{ playing: boolean; speed: number; onStepChange?
     const pipelines = ['Setup', 'Download', 'Install', 'Verify', 'Write', 'Compile', 'Run'];
 
     return (
-        <div className="w-full max-w-md bg-[#090d1a] border-2 border-brand-500/40 rounded-2xl overflow-hidden shadow-[0_0_60px_-15px_rgba(59,130,246,0.5)] select-none font-mono">
+        <div className="w-full max-w-md rounded-2xl overflow-hidden select-none font-mono simulation-panel">
             {/* Build pipeline status bar at the top */}
             <div className="bg-slate-950 px-4 py-2.5 border-b border-brand-500/20 flex items-center justify-between gap-1">
                 <span className="text-[7.5px] font-bold text-slate-500 uppercase shrink-0">PIPELINE:</span>
@@ -194,15 +194,15 @@ const VariablesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
     return (
         <div className="w-full max-w-md flex flex-col gap-4 select-none font-mono">
             {/* Memory Header with status badge */}
-            <div className="flex flex-col gap-2 bg-gradient-to-r from-slate-900 via-[#0a0f1d] to-slate-900 p-3.5 rounded-2xl border border-brand-500/20 shadow-lg">
-                <div className="flex items-center justify-between text-[10px] text-slate-400">
+            <div className="flex flex-col gap-2 bg-gradient-to-r from-brand-950/80 via-slate-900/60 to-brand-950/80 p-3.5 rounded-2xl border border-brand-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+                <div className="flex items-center justify-between text-[10px]">
                     <div className="flex items-center gap-1.5">
                         <Cpu className="w-4 h-4 text-cyan-400 animate-spin" /> 
-                        <span className="font-extrabold text-slate-200">RAM STACK VISUALIZER</span>
+                        <span className="font-extrabold text-cyan-300">RAM STACK VISUALIZER</span>
                     </div>
-                    <span className="bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 text-[9px] font-black">ACTIVE</span>
+                    <span className="bg-brand-500/20 text-cyan-300 px-2 py-0.5 rounded border border-brand-500/35 text-[9px] font-black shadow-[0_0_8px_rgba(59,130,246,0.3)]">ACTIVE</span>
                 </div>
-                <div className="text-[11px] text-slate-300 leading-relaxed bg-slate-950/60 px-3 py-2 rounded-xl border border-slate-900/60 min-h-[46px] flex items-center">
+                <div className="text-[11px] text-slate-200 leading-relaxed bg-slate-950/70 px-3 py-2 rounded-xl border border-brand-500/10 min-h-[46px] flex items-center shadow-inner">
                     {cur.desc}
                 </div>
             </div>
@@ -226,9 +226,9 @@ const VariablesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
                             animate={{
                                 opacity: 1,
                                 x: 0,
-                                borderColor: isActive ? v.color : 'rgba(255,255,255,0.05)',
-                                backgroundColor: isActive ? '#0d1527' : '#020617',
-                                boxShadow: justAllocated ? `0 0 25px -4px ${v.color}` : 'none'
+                                borderColor: isActive ? v.color : 'rgba(255,255,255,0.06)',
+                                backgroundColor: isActive ? 'rgba(15,23,42,0.85)' : 'rgba(15,23,42,0.4)',
+                                boxShadow: justAllocated ? `0 0 25px -4px ${v.color}` : isActive ? `0 0 15px -6px ${v.color}` : 'none'
                             }}
                             className="flex items-center border rounded-xl px-4 py-3 relative overflow-hidden group shadow"
                         >
@@ -326,7 +326,7 @@ const DataTypesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
     return (
         <div className="w-full max-w-md flex flex-col gap-5 select-none font-mono">
             {/* Header info text */}
-            <div className="h-16 text-center flex flex-col justify-center bg-slate-900/60 p-3.5 rounded-2xl border border-brand-500/20 backdrop-blur shadow-lg">
+            <div className="h-16 text-center flex flex-col justify-center bg-gradient-to-r from-brand-950/80 via-slate-900/60 to-brand-950/80 p-3.5 rounded-2xl border border-brand-500/35 backdrop-blur shadow-[0_0_20px_rgba(59,130,246,0.15)]">
                 <AnimatePresence mode="wait">
                     {step === 0 ? (
                         <motion.span key="start" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-slate-400 leading-normal">
@@ -367,7 +367,7 @@ const DataTypesVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (
                                 {t.name}
                             </motion.span>
                             
-                            <div className="flex-1 h-10 bg-slate-950 border border-slate-900 rounded-xl overflow-hidden flex relative shadow-inner">
+                            <div className="flex-1 h-10 bg-slate-950/90 border border-brand-500/10 rounded-xl overflow-hidden flex relative shadow-[inset_0_0_15px_rgba(0,0,0,0.6)]">
                                 {isActive && (
                                     <motion.div 
                                         animate={{ opacity: [0.1, 0.25, 0.1] }}
@@ -456,14 +456,15 @@ const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
     return (
         <div className="w-full max-w-md flex flex-col items-center gap-6 select-none font-mono">
             {/* Visual Streams Flow */}
-            <div className="w-full flex items-center justify-between relative px-2.5 py-6 bg-slate-950/40 rounded-2xl border border-slate-900/60 shadow-inner">
+            <div className="w-full flex items-center justify-between relative px-2.5 py-6 bg-gradient-to-r from-[#0d1326]/60 to-[#0b1020]/60 rounded-2xl border border-brand-500/25 shadow-[inset_0_0_20px_rgba(59,130,246,0.05),0_0_15px_rgba(59,130,246,0.1)]">
                 
                 {/* Keyboard / Input */}
                 <motion.div 
                     animate={{
                         borderColor: cur.active === 'cin' ? '#3B82F6' : 'rgba(255,255,255,0.06)',
-                        backgroundColor: cur.active === 'cin' ? 'rgba(59,130,246,0.15)' : '#020617',
-                        scale: cur.active === 'cin' ? 1.05 : 1
+                        backgroundColor: cur.active === 'cin' ? 'rgba(59,130,246,0.15)' : 'rgba(15,23,42,0.6)',
+                        scale: cur.active === 'cin' ? 1.05 : 1,
+                        boxShadow: cur.active === 'cin' ? '0 0 20px rgba(59,130,246,0.3)' : 'none'
                     }}
                     className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center border-2 shadow-lg relative group"
                 >
@@ -485,7 +486,7 @@ const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
                             <motion.div 
                                 initial={{ x: -30 }} animate={{ x: 30 }}
                                 transition={{ repeat: Infinity, duration: 1.2 / speed, ease: 'linear' }}
-                                className="absolute top-1/2 -translate-y-1/2 w-4.5 h-4.5 rounded-full bg-brand-500 text-[8px] font-black text-[#020617] flex items-center justify-center shadow-lg"
+                                className="absolute top-1/2 -translate-y-1/2 w-4.5 h-4.5 rounded-full bg-brand-500 text-[8px] font-black text-[#020617] flex items-center justify-center shadow-lg animate-pulse"
                             >
                                 3
                             </motion.div>
@@ -498,19 +499,20 @@ const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
                 <motion.div 
                     animate={{
                         borderColor: cur.active === 'mem' || cur.active === 'alu' ? '#F59E0B' : 'rgba(255,255,255,0.06)',
-                        backgroundColor: cur.active === 'mem' || cur.active === 'alu' ? 'rgba(245,158,11,0.1)' : '#020617',
-                        scale: cur.active === 'mem' || cur.active === 'alu' ? 1.03 : 1
+                        backgroundColor: cur.active === 'mem' || cur.active === 'alu' ? 'rgba(245,158,11,0.1)' : 'rgba(15,23,42,0.6)',
+                        scale: cur.active === 'mem' || cur.active === 'alu' ? 1.03 : 1,
+                        boxShadow: cur.active === 'mem' || cur.active === 'alu' ? '0 0 20px rgba(245,158,11,0.2)' : 'none'
                     }}
                     className="w-32 h-24 border-2 rounded-2xl flex flex-col justify-center px-3.5 gap-1.5 relative shadow-lg"
                 >
-                    <span className="absolute -top-3.5 left-3 text-[8px] text-amber-500 font-extrabold bg-[#090d1a] px-1.5 rounded">RAM MEMORY</span>
+                    <span className="absolute -top-3.5 left-3 text-[8px] text-[#020617] font-black bg-amber-500 px-1.5 rounded border border-amber-600/40">RAM MEMORY</span>
                     
                     <div className="flex justify-between items-center text-[10px]">
-                        <span className="text-[#475569]">int a:</span>
+                        <span className="text-slate-400 font-medium">int a:</span>
                         <motion.span key={step >= 3 ? '3' : 'g'} animate={{ scale: step >= 3 ? [1, 1.2, 1] : 1 }} className="font-black text-slate-100">{step >= 3 ? '3' : '(garbage)'}</motion.span>
                     </div>
                     <div className="flex justify-between items-center text-[10px]">
-                        <span className="text-[#475569]">int b:</span>
+                        <span className="text-slate-400 font-medium">int b:</span>
                         <motion.span key={step >= 3 ? '7' : 'g'} animate={{ scale: step >= 3 ? [1, 1.2, 1] : 1 }} className="font-black text-slate-100">{step >= 3 ? '7' : '(garbage)'}</motion.span>
                     </div>
                     
@@ -552,8 +554,9 @@ const IOStreamVis: React.FC<{ playing: boolean; speed: number; onStepChange?: (s
                 <motion.div 
                     animate={{
                         borderColor: cur.active === 'stdout' ? '#10B981' : 'rgba(255,255,255,0.06)',
-                        backgroundColor: cur.active === 'stdout' ? 'rgba(16,185,129,0.15)' : '#020617',
-                        scale: cur.active === 'stdout' ? 1.05 : 1
+                        backgroundColor: cur.active === 'stdout' ? 'rgba(16,185,129,0.15)' : 'rgba(15,23,42,0.6)',
+                        scale: cur.active === 'stdout' ? 1.05 : 1,
+                        boxShadow: cur.active === 'stdout' ? '0 0 20px rgba(16,185,129,0.3)' : 'none'
                     }}
                     className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center border-2 shadow-lg relative group"
                 >

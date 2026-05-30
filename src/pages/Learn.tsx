@@ -593,36 +593,43 @@ export const Learn = () => {
                             <div className={cn("transition-all duration-500", !simulationUnlocked && "blur-md pointer-events-none select-none opacity-40")}>
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                     {/* Left Panel: Simulation Canvas (2/3 width on large screens) */}
-                                    <div className="lg:col-span-2 flex flex-col border border-borderAdaptive/10 rounded-3xl bg-[#080C10] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden relative group">
+                                    <div className="lg:col-span-2 flex flex-col rounded-3xl overflow-hidden relative group simulation-canvas">
                                         {/* Accent lights */}
-                                        <div className="absolute -top-[150px] -left-[150px] w-[300px] h-[300px] rounded-full bg-brand-500/10 blur-[120px] pointer-events-none" />
-                                        <div className="absolute -bottom-[150px] -right-[150px] w-[300px] h-[300px] rounded-full bg-purple/10 blur-[120px] pointer-events-none" />
+                                        <div className="absolute -top-[150px] -left-[150px] w-[300px] h-[300px] rounded-full bg-brand-500/20 blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
+                                        <div className="absolute -bottom-[150px] -right-[150px] w-[300px] h-[300px] rounded-full bg-purple-500/20 blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: '6s' }} />
                                         
-                                        <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
+                                        <div className="absolute inset-0 pointer-events-none opacity-[0.15] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
                                         
-                                        <div className="flex items-center justify-between px-6 py-4 border-b border-borderAdaptive/5 bg-brand-950/20">
-                                            <h4 className="text-sm font-bold text-brand-300">
+                                        <div className="flex items-center justify-between px-6 py-4 border-b border-brand-500/15 bg-gradient-to-r from-brand-950/80 via-slate-900/80 to-[#1b1935]/80">
+                                            <h4 className="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-cyan-300 to-purple-400">
                                                 {topicData?.title ?? topic?.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} Simulation
                                             </h4>
-                                            <span className="text-[10px] font-mono text-text-2 bg-brand-900 px-2 py-0.5 rounded border border-borderAdaptive/5">
+                                            <span className="text-[10px] font-mono text-cyan-300 bg-brand-950 px-2 py-0.5 rounded border border-brand-500/20 shadow-md">
                                                 Step {activeStep + 1} of {content.narrationSteps?.length ?? 6}
                                             </span>
                                         </div>
 
                                         <div className="min-h-[350px] flex-1 flex items-center justify-center relative p-8">
-                                            <VisualizerContext.Provider value={{ step: activeStep, setStep: setActiveStep }}>
-                                                <TopicVisualizer
-                                                    topicId={topic ?? ''}
-                                                    topicTitle={topicData?.title ?? ''}
-                                                    playing={visPlaying}
-                                                    speed={speedNum}
-                                                    onStepChange={(s) => {
-                                                        setActiveStep(s);
-                                                        setSimulationInteracted(true);
-                                                        setPracticeUnlocked(true);
-                                                    }}
-                                                />
-                                            </VisualizerContext.Provider>
+                                            {/* Beautiful neon glowing laboratory backdrop */}
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-brand-900/10 via-[#1b1935]/20 to-[#4c1d95]/10 animate-pulse pointer-events-none" style={{ animationDuration: '8s' }} />
+                                            <div className="absolute w-[280px] h-[280px] rounded-full bg-cyan-500/20 blur-[130px] pointer-events-none" style={{ animationDuration: '5s' }} />
+                                            <div className="absolute w-[240px] h-[240px] rounded-full bg-purple-500/15 blur-[100px] pointer-events-none" style={{ animationDuration: '7s' }} />
+                                            
+                                            <div className="relative z-10 w-full flex justify-center">
+                                                <VisualizerContext.Provider value={{ step: activeStep, setStep: setActiveStep }}>
+                                                    <TopicVisualizer
+                                                        topicId={topic ?? ''}
+                                                        topicTitle={topicData?.title ?? ''}
+                                                        playing={visPlaying}
+                                                        speed={speedNum}
+                                                        onStepChange={(s) => {
+                                                            setActiveStep(s);
+                                                            setSimulationInteracted(true);
+                                                            setPracticeUnlocked(true);
+                                                        }}
+                                                    />
+                                                </VisualizerContext.Provider>
+                                            </div>
                                         </div>
 
                                         {/* Control Bar inside visualizer card */}
