@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { 
@@ -140,7 +140,26 @@ export const Learn = () => {
         };
     }, [topic]);
 
-    // Hook up narration
+    // ─── Step advancement ──────────────────────────────────────────────────────
+    // Total steps for the current topic (used by both narration-driven and
+    // timer-driven advancement).
+    const totalSteps = content.narrationSteps?.length ?? 6;
+
+    // Advance to the next step, or stop playing when we reach the end.
+    const advanceStep = useCallback(() => {
+        setActiveStep(prev => {
+            const next = prev + 1;
+            if (next >= totalSteps) {
+                // Reached the last step – stop playback
+                setVisPlaying(false);
+                return prev;
+            }
+            return next;
+        });
+    }, [totalSteps]);
+
+    // Hook up narration – pass advanceStep as onEnd so the narration drives
+    // step advancement when it is enabled.
     const rawNarrationText = content.narrationSteps?.[activeStep];
     const narrationText = narrationVoice === 'hinglish-classroom' && topic
         ? getIndianNarration(topic, activeStep, rawNarrationText ?? '')
@@ -150,8 +169,39 @@ export const Learn = () => {
         visPlaying,
         speedNum,
         narrationEnabled,
-        narrationVoice
+        narrationVoice,
+        narrationEnabled ? advanceStep : undefined   // onEnd callback
     );
+
+    // When narration is DISABLED we drive step advancement with our own timer
+    // so the animation still progresses automatically.
+    const timerEnabledRef = useRef(false);
+    useEffect(() => {
+        // Only run when narration is off and the simulation is playing
+        if (narrationEnabled || !visPlaying) {
+            timerEnabledRef.current = false;
+            return;
+        }
+        timerEnabledRef.current = true;
+        // Use ~2 200 ms per step (same default as the visualizers), adjusted for speed
+        const msPerStep = Math.round(2200 / speedNum);
+        const id = setInterval(() => {
+            if (!timerEnabledRef.current) return;
+            setActiveStep(prev => {
+                const next = prev + 1;
+                if (next >= totalSteps) {
+                    setVisPlaying(false);
+                    timerEnabledRef.current = false;
+                    return prev;
+                }
+                return next;
+            });
+        }, msPerStep);
+        return () => {
+            timerEnabledRef.current = false;
+            clearInterval(id);
+        };
+    }, [narrationEnabled, visPlaying, speedNum, totalSteps]);
 
     // Module topics for progress
     const moduleTopics = useMemo(() => topics.filter(t => t.moduleId === mod), [mod]);
@@ -564,7 +614,7 @@ export const Learn = () => {
                                                 <TopicVisualizer
                                                     topicId={topic ?? ''}
                                                     topicTitle={topicData?.title ?? ''}
-                                                    playing={visPlaying && (!narrationEnabled || !isSpeaking)}
+                                                    playing={visPlaying}
                                                     speed={speedNum}
                                                     onStepChange={(s) => {
                                                         setActiveStep(s);
@@ -587,7 +637,14 @@ export const Learn = () => {
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        setVisPlaying(p => !p);
+                                                        setVisPlaying(p => {
+                                                            const next = !p;
+                                                            // If starting playback from the last step, rewind first
+                                                            if (next && activeStep >= totalSteps - 1) {
+                                                                setActiveStep(0);
+                                                            }
+                                                            return next;
+                                                        });
                                                         setSimulationInteracted(true);
                                                         setPracticeUnlocked(true);
                                                     }}
